@@ -19,7 +19,7 @@ adminUploadsRouter.get('/signature', async (req, res) => {
   })
 
   const timestamp = Math.floor(Date.now() / 1000)
-  const folder = (req.query.folder ?? 'cozyfoam/products').toString()
+  const folder = (req.query.folder ?? 'uniik/products').toString()
   const resourceType = (req.query.resourceType ?? 'image').toString() // image | raw
   const publicId = (req.query.publicId ?? '').toString()
   const useFilename = (req.query.useFilename ?? 'false').toString() === 'true'

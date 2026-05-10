@@ -167,8 +167,8 @@ export function AdminCategoriesPage() {
     setError('')
     try {
       const folder = editing?._id
-        ? `cozyfoam/categories/${editing._id}`
-        : 'cozyfoam/categories/tmp'
+        ? `uniik/categories/${editing._id}`
+        : 'uniik/categories/tmp'
       const sigRes = await fetch(
         `${import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:4000/api'}/admin/uploads/signature?folder=${encodeURIComponent(folder)}`,
         { headers: adminHeaders() as Record<string, string> },

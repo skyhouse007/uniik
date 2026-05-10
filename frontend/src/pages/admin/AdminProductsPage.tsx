@@ -638,7 +638,7 @@ export function AdminProductsPage() {
     setUploading(true)
     setError('')
     try {
-      const folder = editingId ? `cozyfoam/products/${editingId}` : 'cozyfoam/products/tmp'
+      const folder = editingId ? `uniik/products/${editingId}` : 'uniik/products/tmp'
       const sigRes = await fetch(
         `${import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:4000/api'}/admin/uploads/signature?folder=${encodeURIComponent(folder)}`,
         { headers: adminHeaders() as any },
@@ -681,7 +681,7 @@ export function AdminProductsPage() {
     setUploading(true)
     setError('')
     try {
-      const folder = `cozyfoam/products/${editingId}`
+      const folder = `uniik/products/${editingId}`
       const sigRes = await fetch(
         `${import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:4000/api'}/admin/uploads/signature?folder=${encodeURIComponent(folder)}&resourceType=raw`,
         { headers: adminHeaders() as any },
