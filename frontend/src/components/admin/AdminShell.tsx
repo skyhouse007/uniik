@@ -13,21 +13,24 @@ export function AdminShell() {
   const loc = useLocation()
   return (
     <div className="container-page py-8">
-      <div className="rounded-3xl border border-[rgb(var(--border))] bg-gradient-to-r from-white to-[rgb(var(--surface))] p-5 shadow-sm">
+      <div className="rounded-3xl border border-white/25 bg-black p-5 text-white shadow-sm">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
-            <div className="text-xs font-semibold tracking-wide text-[rgb(var(--brand))]">Admin Workspace</div>
-            <div className="mt-1 text-xl font-extrabold tracking-tight">Admin</div>
-            <div className="mt-1 text-sm text-[rgb(var(--muted))]">Manage catalog, orders and content from one place</div>
+            <div className="text-xs font-semibold tracking-wide text-white/90">Admin Workspace</div>
+            <div className="mt-1 text-xl font-extrabold tracking-tight text-white">Admin</div>
+            <div className="mt-1 text-sm text-white/65">Manage catalog, orders and content from one place</div>
           </div>
-          <Link to="/products" className="rounded-xl border border-[rgb(var(--border))] bg-white px-3 py-2 text-xs font-semibold text-[rgb(var(--brand))]">
+          <Link
+            to="/products"
+            className="rounded-xl border border-white/30 bg-white/10 px-3 py-2 text-xs font-semibold text-white transition hover:bg-white/15"
+          >
             View storefront
           </Link>
         </div>
       </div>
 
-      <div className="mt-6 overflow-hidden rounded-3xl border border-[rgb(var(--border))] bg-white shadow-sm">
-        <div className="flex flex-wrap gap-2 border-b border-[rgb(var(--border))] bg-[rgb(var(--surface))] p-3">
+      <div className="mt-6 overflow-hidden rounded-3xl border border-white/25 bg-black shadow-sm">
+        <div className="flex flex-wrap gap-2 border-b border-white/15 bg-neutral-950 p-3">
           {items.map((it) => {
             const active = loc.pathname === it.to
             return (
@@ -37,8 +40,8 @@ export function AdminShell() {
                 className={[
                   'rounded-xl px-4 py-2 text-sm font-semibold transition',
                   active
-                    ? 'bg-white text-[rgb(var(--brand))] shadow-sm'
-                    : 'text-[rgb(var(--muted))] hover:bg-white hover:text-[rgb(var(--brand))]',
+                    ? 'bg-white text-neutral-900 shadow-sm'
+                    : 'text-white/70 hover:bg-white/10 hover:text-white',
                 ].join(' ')}
               >
                 {it.label}
@@ -46,7 +49,7 @@ export function AdminShell() {
             )
           })}
         </div>
-        <div className="p-6">
+        <div className="bg-black p-6 text-white">
           <Outlet />
         </div>
       </div>

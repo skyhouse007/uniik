@@ -102,11 +102,11 @@ export function AdminContentPage() {
       </div>
 
       <div className="mt-5 grid gap-4 lg:grid-cols-[420px_1fr]">
-        <div className="rounded-3xl border border-[rgb(var(--border))] bg-white p-5 shadow-sm">
+        <div className="rounded-3xl border border-[rgb(var(--border))] bg-white p-5 text-neutral-900 shadow-sm">
           <div className="text-sm font-semibold">Header settings</div>
           <div className="mt-4 space-y-3">
             <div className="space-y-2">
-              <div className="text-xs font-medium text-[rgb(var(--fg))]">Announcements</div>
+              <div className="text-xs font-medium text-neutral-900">Announcements</div>
               <p className="text-xs text-[rgb(var(--muted))]">
                 Each box is one message. The storefront rotates them automatically every few seconds. Empty boxes are ignored on save.
               </p>
@@ -140,7 +140,7 @@ export function AdminContentPage() {
                             ? 'e.g. Free shipping on prepaid orders above ₹999'
                             : 'Next message…'
                         }
-                        className="w-full rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm"
+                        className="w-full rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm text-neutral-900"
                       />
                       <div className="mt-0.5 text-right text-[10px] text-[rgb(var(--muted))]">
                         {line.length}/{MAX_ANNOUNCEMENT_LEN}
@@ -173,7 +173,7 @@ export function AdminContentPage() {
                       : { ...f, announcementLines: [...f.announcementLines, ''] },
                   )
                 }
-                className="w-full rounded-xl border border-dashed border-[rgb(var(--border))] py-2 text-xs font-semibold text-[rgb(var(--muted))] transition hover:border-[rgb(var(--muted))] hover:text-[rgb(var(--fg))] disabled:opacity-40"
+                className="w-full rounded-xl border border-dashed border-[rgb(var(--border))] py-2 text-xs font-semibold text-[rgb(var(--muted))] transition hover:border-[rgb(var(--muted))] hover:text-neutral-900 disabled:opacity-40"
               >
                 + Add another announcement ({headerForm.announcementLines.length}/{MAX_ANNOUNCEMENTS})
               </button>
@@ -182,13 +182,13 @@ export function AdminContentPage() {
               value={headerForm.contactEmail}
               onChange={(e) => setHeaderForm((f) => ({ ...f, contactEmail: e.target.value }))}
               placeholder="Contact email"
-              className="w-full rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm"
+              className="w-full rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm text-neutral-900"
             />
             {error ? <div className="text-xs text-red-600">{error}</div> : null}
             <button
               disabled={saving}
               onClick={saveSettings}
-              className="w-full rounded-xl bg-[rgb(var(--brand))] px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+              className="w-full rounded-xl bg-[rgb(var(--brand))] px-4 py-2 text-sm font-semibold text-black disabled:opacity-50"
             >
               {saving ? 'Saving...' : 'Save'}
             </button>
@@ -198,7 +198,7 @@ export function AdminContentPage() {
           ) : null}
         </div>
 
-        <div className="rounded-3xl border border-[rgb(var(--border))] bg-white p-5 shadow-sm">
+        <div className="rounded-3xl border border-[rgb(var(--border))] bg-white p-5 text-neutral-900 shadow-sm">
           <div className="text-sm font-semibold">Bulk order messages</div>
           <div className="mt-4 grid gap-2">
             {inquiries === null ? (
@@ -219,14 +219,14 @@ export function AdminContentPage() {
                         await adminPut(`/admin/content/bulk-inquiries/${i._id}`, { status: e.target.value })
                         await load()
                       }}
-                      className="rounded-xl border border-[rgb(var(--border))] bg-white px-3 py-2 text-xs"
+                      className="rounded-xl border border-[rgb(var(--border))] bg-white px-3 py-2 text-xs text-neutral-900"
                     >
                       <option value="new">new</option>
                       <option value="contacted">contacted</option>
                       <option value="closed">closed</option>
                     </select>
                   </div>
-                  <div className="mt-2 text-sm text-[rgb(var(--fg))]">{i.message}</div>
+                  <div className="mt-2 text-sm text-neutral-800">{i.message}</div>
                   <div className="mt-1 text-xs text-[rgb(var(--muted))]">{new Date(i.createdAt).toLocaleString()}</div>
                 </div>
               ))

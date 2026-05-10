@@ -356,7 +356,6 @@ export function Navbar() {
   const [accountMenuOpen, setAccountMenuOpen] = useState(false)
   const [phoneMenuOpen, setPhoneMenuOpen] = useState(false)
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
   const megaAnchorRef = useRef<HTMLDivElement | null>(null)
   const itemCount = useAppSelector((s) => s.cart.items.reduce((sum, i) => sum + i.quantity, 0))
   const wishlistCount = useAppSelector((s) => s.wishlist.productIds.length)
@@ -422,12 +421,20 @@ export function Navbar() {
     }
   }, [])
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 6)
-    onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
+  useLayoutEffect(() => {
+    const el = headerRef.current
+    if (!el) return
+    const sync = () => {
+      const h = el.offsetHeight
+      if (typeof document !== 'undefined' && h > 0) {
+        document.documentElement.style.setProperty('--site-header-height', `${h}px`)
+      }
+    }
+    sync()
+    const ro = new ResizeObserver(sync)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [categoryTree.length, announcements.length])
 
   const updateMegaTop = useCallback(() => {
     const el = megaAnchorRef.current
@@ -438,15 +445,14 @@ export function Navbar() {
   useLayoutEffect(() => {
     updateMegaTop()
     window.addEventListener('resize', updateMegaTop)
-    window.addEventListener('scroll', updateMegaTop, true)
-    return () => {
-      window.removeEventListener('resize', updateMegaTop)
-      window.removeEventListener('scroll', updateMegaTop, true)
-    }
+    return () => window.removeEventListener('resize', updateMegaTop)
   }, [updateMegaTop, categoryTree.length])
 
   useLayoutEffect(() => {
-    if (openMegaId) updateMegaTop()
+    if (!openMegaId) return
+    updateMegaTop()
+    window.addEventListener('scroll', updateMegaTop, true)
+    return () => window.removeEventListener('scroll', updateMegaTop, true)
   }, [openMegaId, updateMegaTop])
 
   useEffect(() => {
@@ -546,21 +552,19 @@ export function Navbar() {
 
   const categoryTriggerClass = (open: boolean) =>
     [
-      'inline-flex items-center whitespace-nowrap border-b-2 border-transparent pb-0.5 text-[10px] font-medium uppercase leading-none tracking-[0.08em] text-black transition lg:text-[11px]',
-      'hover:border-current/25 hover:text-black/70',
-      open ? 'border-black' : '',
+      'inline-flex items-center whitespace-nowrap border-b-2 border-transparent pb-0.5 text-[10px] font-medium uppercase leading-none tracking-[0.08em] text-[rgb(var(--fg))] transition lg:text-[11px]',
+      'hover:border-current/25 hover:text-[rgb(var(--muted))]',
+      open ? 'border-[rgb(var(--fg))]' : '',
     ].join(' ')
 
   return (
-    <header
-      ref={headerRef}
-      className={[
-        'font-header sticky top-0 z-40 overflow-visible border-b border-[rgb(var(--border))] bg-white',
-        scrolled ? 'shadow-[0_10px_30px_rgba(0,0,0,0.06)]' : 'shadow-[0_1px_0_rgba(0,0,0,0.03)]',
-      ].join(' ')}
-    >
+    <>
+      <header
+        ref={headerRef}
+        className="font-header relative z-40 overflow-visible border-b border-[rgb(var(--border))] bg-page-gradient shadow-[0_1px_0_rgba(255,255,255,0.06)]"
+      >
       <div
-        className="font-ui relative flex min-h-[2rem] items-center justify-center overflow-hidden bg-[rgb(var(--hero))] px-3 py-0.5 text-center text-[11px] font-medium tracking-[0.02em] text-black sm:min-h-[2.125rem] sm:text-[12px]"
+        className="font-ui relative flex min-h-[2rem] items-center justify-center overflow-hidden bg-[rgb(var(--hero))] px-3 py-0.5 text-center text-[11px] font-medium tracking-[0.02em] text-[rgb(var(--fg))] sm:min-h-[2.125rem] sm:text-[12px]"
         onMouseEnter={() => setAnnouncementRotationPaused(true)}
         onMouseLeave={() => setAnnouncementRotationPaused(false)}
       >
@@ -580,29 +584,19 @@ export function Navbar() {
         </div>
       </div>
 
-      <div className="bg-white">
-        <div className="container-page relative flex h-[80px] flex-nowrap items-center gap-2 sm:gap-4 lg:gap-5">
+      <div>
+        <div className="container-page relative flex h-[160px] flex-nowrap items-center gap-2 sm:gap-4 md:grid md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] md:items-center lg:gap-5">
           <button
             type="button"
-            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-black md:hidden"
+            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[rgb(var(--fg))] md:hidden"
             aria-label="Open menu"
             onClick={() => setMobileNavOpen(true)}
           >
             <IconMenu />
           </button>
 
-          <Link
-            to="/"
-            className="absolute left-1/2 flex min-w-0 -translate-x-1/2 items-center md:static md:left-auto md:translate-x-0"
-            onClick={closeMobile}
-          >
-            <div className="flex h-12 w-36 shrink-0 items-center sm:h-12 sm:w-44 md:w-52 lg:h-14 lg:w-56 xl:w-64">
-              <img src={uniikLogo} alt="Uniik" className="-mt-1 h-full w-full object-contain md:object-left" />
-            </div>
-          </Link>
-
-          <div className="hidden min-w-0 flex-1 md:flex md:justify-center">
-            <form onSubmit={handleSearchSubmit} className="w-full max-w-2xl">
+          <div className="hidden min-w-0 md:flex md:max-w-2xl md:justify-self-start md:self-center">
+            <form onSubmit={handleSearchSubmit} className="w-full min-w-0">
               <label htmlFor="nav-search" className="sr-only">
                 Search products
               </label>
@@ -633,11 +627,21 @@ export function Navbar() {
             </form>
           </div>
 
-          <div className="ml-auto flex shrink-0 items-center gap-2 self-center">
+          <Link
+            to="/"
+            className="absolute left-1/2 flex min-w-0 -translate-x-1/2 items-center justify-center md:static md:translate-x-0 md:justify-self-center"
+            onClick={closeMobile}
+          >
+            <div className="flex h-[4.5rem] w-52 shrink-0 items-center sm:w-60 md:h-[6.5rem] md:w-80 lg:h-[7.5rem] lg:w-96 xl:h-[8.5rem] xl:w-[28rem]">
+              <img src={uniikLogo} alt="Uniik" className="-mt-1 h-full w-full object-contain object-center md:object-center" />
+            </div>
+          </Link>
+
+          <div className="ml-auto flex shrink-0 items-center gap-2 self-center md:ml-0 md:justify-self-end">
             <div className="flex items-center gap-0 sm:gap-0.5">
               <Link
                 to="/wishlist"
-                className="relative inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-black transition hover:bg-[rgb(var(--surface))] hover:text-black/70"
+                className="relative inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[rgb(var(--fg))] transition hover:bg-[rgb(var(--surface))] hover:text-[rgb(var(--muted))]"
                 aria-label={`Wishlist, ${wishlistCount} items`}
               >
                 <IconHeart />
@@ -660,7 +664,7 @@ export function Navbar() {
                   aria-haspopup="true"
                   aria-label={`Call ${ANNOUNCEMENT_CALL_DISPLAY}`}
                   className={[
-                    'inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-black transition hover:bg-[rgb(var(--surface))] hover:text-black/70',
+                    'inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[rgb(var(--fg))] transition hover:bg-[rgb(var(--surface))] hover:text-[rgb(var(--muted))]',
                     phoneMenuOpen ? 'bg-[rgb(var(--surface))]' : '',
                   ].join(' ')}
                   onClick={() => {
@@ -700,7 +704,7 @@ export function Navbar() {
                   <button
                     type="button"
                     aria-label="Sign in"
-                    className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-black transition hover:bg-[rgb(var(--surface))] hover:text-black/70"
+                    className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[rgb(var(--fg))] transition hover:bg-[rgb(var(--surface))] hover:text-[rgb(var(--muted))]"
                   >
                     <IconUser />
                   </button>
@@ -720,7 +724,7 @@ export function Navbar() {
                     aria-haspopup="true"
                     aria-label={`Account, ${customerName}`}
                     className={[
-                      'inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-black transition hover:bg-[rgb(var(--surface))] hover:text-black/70',
+                      'inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[rgb(var(--fg))] transition hover:bg-[rgb(var(--surface))] hover:text-[rgb(var(--muted))]',
                       accountMenuOpen ? 'bg-[rgb(var(--surface))]' : '',
                     ].join(' ')}
                     onClick={() => {
@@ -769,7 +773,7 @@ export function Navbar() {
 
               <Link
                 to="/cart"
-                className="relative inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-black transition hover:bg-[rgb(var(--surface))] hover:text-black/70"
+                className="relative inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[rgb(var(--fg))] transition hover:bg-[rgb(var(--surface))] hover:text-[rgb(var(--muted))]"
                 aria-label={`Shopping bag, ${itemCount} items`}
               >
                 <IconBag />
@@ -784,7 +788,7 @@ export function Navbar() {
         </div>
       </div>
 
-      <div ref={megaAnchorRef} className="hidden border-t border-[rgb(var(--border))] bg-white md:block">
+      <div ref={megaAnchorRef} className="hidden border-t border-[rgb(var(--border))] md:block">
         <div className="container-page relative">
           <nav
             className="relative z-0 flex min-h-0 min-w-0 items-center justify-center overflow-x-auto overflow-y-visible py-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
@@ -831,6 +835,7 @@ export function Navbar() {
           </nav>
         </div>
       </div>
+      </header>
 
       {openMegaCat ? (
         <div
@@ -936,6 +941,6 @@ export function Navbar() {
           </div>
         </>
       ) : null}
-    </header>
+    </>
   )
 }

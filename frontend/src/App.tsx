@@ -11,6 +11,7 @@ import { OrdersPage } from './pages/OrdersPage'
 import { ProfilePage } from './pages/ProfilePage'
 import { WishlistPage } from './pages/WishlistPage'
 import { WalletPage } from './pages/WalletPage'
+import { AboutPage } from './pages/AboutPage'
 import { BulkOrderPage } from './pages/BulkOrderPage'
 import { ComparePage } from './pages/ComparePage'
 import { TrackOrderPage } from './pages/TrackOrderPage'
@@ -36,6 +37,7 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
       { path: '/', element: <HomePage /> },
+      { path: '/about', element: <AboutPage /> },
       { path: '/categories', element: <CategoryPage /> },
       { path: '/categories/:parentId', element: <CategoryPage /> },
       { path: '/products', element: <ProductListingPage /> },

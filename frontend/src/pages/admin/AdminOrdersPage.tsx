@@ -86,7 +86,7 @@ export function AdminOrdersPage() {
         <select
           value={status}
           onChange={(e) => setStatus(e.target.value)}
-          className="rounded-xl border border-[rgb(var(--border))] bg-white px-3 py-2 text-sm"
+          className="rounded-xl border border-[rgb(var(--border))] bg-white px-3 py-2 text-sm text-neutral-900"
         >
           <option value="">All statuses</option>
           <option value="created">Created</option>
@@ -98,7 +98,7 @@ export function AdminOrdersPage() {
         <select
           value={payment}
           onChange={(e) => setPayment(e.target.value)}
-          className="rounded-xl border border-[rgb(var(--border))] bg-white px-3 py-2 text-sm"
+          className="rounded-xl border border-[rgb(var(--border))] bg-white px-3 py-2 text-sm text-neutral-900"
         >
           <option value="">All payments</option>
           <option value="paid">Paid</option>
@@ -183,7 +183,7 @@ export function AdminOrdersPage() {
       {selectedId ? (
         <div className="fixed inset-0 z-50">
           <div className="absolute inset-0 bg-black/30" onClick={() => setSelectedId(null)} />
-          <div className="absolute right-0 top-0 h-full w-full max-w-xl overflow-auto bg-white shadow-2xl">
+          <div className="absolute right-0 top-0 h-full w-full max-w-xl overflow-auto bg-white text-neutral-900 shadow-2xl">
             <div className="sticky top-0 border-b border-[rgb(var(--border))] bg-white p-5">
               <div className="flex items-start justify-between gap-3">
                 <div>
@@ -284,7 +284,7 @@ export function AdminOrdersPage() {
                           await load()
                           setSelectedId(selected._id)
                         }}
-                        className="rounded-xl border border-[rgb(var(--border))] bg-white px-3 py-2 text-sm"
+                        className="rounded-xl border border-[rgb(var(--border))] bg-white px-3 py-2 text-sm text-neutral-900"
                       >
                         <option value="created">created</option>
                         <option value="processing">processing</option>
@@ -299,7 +299,7 @@ export function AdminOrdersPage() {
                           await load()
                           setSelectedId(selected._id)
                         }}
-                        className="rounded-xl border border-[rgb(var(--border))] bg-white px-3 py-2 text-sm"
+                        className="rounded-xl border border-[rgb(var(--border))] bg-white px-3 py-2 text-sm text-neutral-900"
                       >
                         <option value="paid">paid</option>
                         <option value="pending">pending</option>

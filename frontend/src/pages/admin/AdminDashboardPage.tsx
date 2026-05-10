@@ -24,17 +24,26 @@ export function AdminDashboardPage() {
       </div>
 
       <div className="mt-6 grid gap-4 lg:grid-cols-3">
-        <Link to="/admin/products" className="rounded-3xl border border-[rgb(var(--border))] bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+        <Link
+          to="/admin/products"
+          className="rounded-3xl border border-[rgb(var(--border))] bg-white p-6 text-neutral-900 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+        >
           <div className="text-sm font-semibold">Products</div>
-          <div className="mt-2 text-sm text-[rgb(var(--muted))]">Create, update, delete products.</div>
+          <div className="mt-2 text-sm text-neutral-600">Create, update, delete products.</div>
         </Link>
-        <Link to="/admin/categories" className="rounded-3xl border border-[rgb(var(--border))] bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+        <Link
+          to="/admin/categories"
+          className="rounded-3xl border border-[rgb(var(--border))] bg-white p-6 text-neutral-900 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+        >
           <div className="text-sm font-semibold">Categories</div>
-          <div className="mt-2 text-sm text-[rgb(var(--muted))]">Create, update, delete categories.</div>
+          <div className="mt-2 text-sm text-neutral-600">Create, update, delete categories.</div>
         </Link>
-        <Link to="/admin/orders" className="rounded-3xl border border-[rgb(var(--border))] bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+        <Link
+          to="/admin/orders"
+          className="rounded-3xl border border-[rgb(var(--border))] bg-white p-6 text-neutral-900 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+        >
           <div className="text-sm font-semibold">Orders</div>
-          <div className="mt-2 text-sm text-[rgb(var(--muted))]">See all orders and update statuses.</div>
+          <div className="mt-2 text-sm text-neutral-600">See all orders and update statuses.</div>
         </Link>
       </div>
 

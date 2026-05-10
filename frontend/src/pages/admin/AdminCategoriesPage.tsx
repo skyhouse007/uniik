@@ -232,7 +232,7 @@ export function AdminCategoriesPage() {
       </div>
 
       <div className="mt-5 grid gap-4 lg:grid-cols-[420px_1fr]">
-        <div className="rounded-3xl border border-[rgb(var(--border))] bg-white p-5 shadow-sm">
+        <div className="rounded-3xl border border-[rgb(var(--border))] bg-white p-5 text-neutral-900 shadow-sm">
           <div className="text-sm font-semibold">{editing ? 'Edit category' : 'New category'}</div>
           <div className="mt-4 space-y-3">
             <input
@@ -313,7 +313,7 @@ export function AdminCategoriesPage() {
           </div>
         </div>
 
-        <div className="rounded-3xl border border-[rgb(var(--border))] bg-white p-5 shadow-sm">
+        <div className="rounded-3xl border border-[rgb(var(--border))] bg-white p-5 text-neutral-900 shadow-sm">
           <div className="text-sm font-semibold">All categories</div>
           <p className="mt-1 text-xs text-[rgb(var(--muted))]">
             Use ↑ ↓ to set order. Top-level order is separate from each parent’s child order. The storefront uses the

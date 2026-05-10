@@ -35,7 +35,7 @@ export function Footer() {
   }, [])
 
   return (
-    <footer className="mt-auto border-t border-[rgb(var(--border))] bg-[rgb(var(--inverse))] text-[rgb(var(--fg))]">
+    <footer className="mt-auto border-t border-[rgb(var(--border))] bg-page-gradient text-[rgb(var(--fg))]">
       <div className="container-page py-14">
         <div className="grid items-start gap-10 md:grid-cols-2 lg:grid-cols-4 lg:gap-x-8 xl:gap-x-10">
           <div className="lg:col-span-1">
@@ -59,6 +59,11 @@ export function Footer() {
             <li>
               <Link className="text-[rgb(var(--fg))] transition hover:text-[rgb(var(--brand))]" to="/categories">
                 Categories
+              </Link>
+            </li>
+            <li>
+              <Link className="text-[rgb(var(--fg))] transition hover:text-[rgb(var(--brand))]" to="/about">
+                About us
               </Link>
             </li>
           </ul>

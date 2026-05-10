@@ -3,24 +3,28 @@
 
 @layer base {
   :root {
-    /* Nature / natural latex — cream, white, forest & sage */
-    --bg: 252 250 245;
-    --fg: 38 48 40;
-    --muted: 102 115 105;
-    --border: 224 218 208;
-    --surface: 248 246 240;
-    --brand: 47 102 200;
-    --brand-hover: 37 84 170;
+    /* Black gradient theme */
+    --bg: 8 8 8;
+    --fg: 255 255 255;
+    --muted: 198 198 198;
+    --border: 62 62 62;
+    --surface: 24 24 24;
+    --brand: 255 255 255;
+    --brand-hover: 230 230 230;
     --inverse: 255 255 255;
-    --hero: 246 243 235;
+    --hero: 18 18 18;
     /* Sale / offers */
-    --accent-sale: 185 45 45;
+    --accent-sale: 220 78 78;
     /* Deep canopy — footer & strong contrast surfaces */
-    --canopy: 32 48 40;
+    --canopy: 0 0 0;
+    /* Page shell — gradient black (body + layout; avoids flat solid fill) */
+    --page-gradient: linear-gradient(160deg, #000000 0%, #0a0a0a 45%, #151515 100%);
 
     /* Typography */
     --font-header: "Poppins", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans", sans-serif;
     --font-ui: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans", sans-serif;
+    /* Navbar (fixed): synced from layout; fallback until measured */
+    --site-header-height: 272px;
   }
 
   html,
@@ -30,7 +34,7 @@
 
   body {
     margin: 0;
-    background: rgb(var(--bg));
+    background: var(--page-gradient);
     color: rgb(var(--fg));
     font-family: var(--font-ui);
     -webkit-font-smoothing: antialiased;
@@ -49,7 +53,20 @@
   }
 }
 
+@keyframes home-feedback-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
 @layer utilities {
+  .bg-page-gradient {
+    background: var(--page-gradient);
+  }
+
   .font-header {
     font-family: var(--font-header);
   }
@@ -60,6 +77,16 @@
 
   .announcement-bar-item {
     animation: announcement-bar-in 0.45s ease-out both;
+  }
+
+  .animate-home-feedback-marquee {
+    animation: home-feedback-marquee 72s linear infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-home-feedback-marquee {
+      animation: none;
+    }
   }
 
   .container-page {

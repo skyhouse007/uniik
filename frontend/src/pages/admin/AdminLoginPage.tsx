@@ -38,35 +38,35 @@ export function AdminLoginPage() {
             Clerk is not used for admin authentication. Use admin credentials or your configured passkey value.
           </p>
         </div>
-        <div className="rounded-3xl border border-[rgb(var(--border))] bg-white p-6 shadow-sm">
-          <div className="text-sm font-semibold">Login</div>
+        <div className="rounded-3xl border border-white/25 bg-black p-6 text-white shadow-sm">
+          <div className="text-sm font-semibold text-white">Login</div>
           <div className="mt-4 space-y-3">
             <input
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Admin email"
-              className="w-full rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm outline-none focus:border-[rgb(var(--brand))]"
+              className="w-full rounded-xl border border-white/20 bg-neutral-950 px-3 py-2 text-sm text-white outline-none placeholder:text-neutral-500 focus:border-white/45"
             />
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
-              className="w-full rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm outline-none focus:border-[rgb(var(--brand))]"
+              className="w-full rounded-xl border border-white/20 bg-neutral-950 px-3 py-2 text-sm text-white outline-none placeholder:text-neutral-500 focus:border-white/45"
             />
-            <div className="text-center text-xs text-[rgb(var(--muted))]">or</div>
+            <div className="text-center text-xs text-white/60">or</div>
             <input
               type="password"
               value={passkey}
               onChange={(e) => setPasskey(e.target.value)}
               placeholder="Passkey"
-              className="w-full rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm outline-none focus:border-[rgb(var(--brand))]"
+              className="w-full rounded-xl border border-white/20 bg-neutral-950 px-3 py-2 text-sm text-white outline-none placeholder:text-neutral-500 focus:border-white/45"
             />
-            {error ? <div className="text-xs text-red-600">{error}</div> : null}
+            {error ? <div className="text-xs text-red-400">{error}</div> : null}
             <button
               onClick={handleLogin}
               disabled={busy || !email || (!password && !passkey)}
-              className="w-full rounded-xl bg-[rgb(var(--brand))] px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+              className="w-full rounded-xl bg-[rgb(var(--brand))] px-4 py-2 text-sm font-semibold text-black disabled:opacity-50"
             >
               {busy ? 'Signing in…' : 'Sign in to admin'}
             </button>

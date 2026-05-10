@@ -22,7 +22,7 @@ export function AdminSecurityPage() {
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <div className="rounded-3xl border border-[rgb(var(--border))] bg-white p-6 shadow-sm">
+        <div className="rounded-3xl border border-[rgb(var(--border))] bg-white p-6 text-neutral-900 shadow-sm">
           <div className="text-sm font-semibold">Rotate passkey</div>
           <p className="mt-2 text-xs text-[rgb(var(--muted))]">
             This project currently stores admin credentials in <code>backend/.env</code>. Update
@@ -47,7 +47,7 @@ export function AdminSecurityPage() {
               onClick={() =>
                 setMsg('Update ADMIN_PASSWORD in backend/.env to the new value and restart the backend server.')
               }
-              className="rounded-xl bg-[rgb(var(--brand))] px-4 py-2 text-sm font-semibold text-white"
+              className="rounded-xl bg-[rgb(var(--brand))] px-4 py-2 text-sm font-semibold text-black"
             >
               Save passkey instructions
             </button>
@@ -55,7 +55,7 @@ export function AdminSecurityPage() {
           </div>
         </div>
 
-        <div className="rounded-3xl border border-[rgb(var(--border))] bg-white p-6 shadow-sm">
+        <div className="rounded-3xl border border-[rgb(var(--border))] bg-white p-6 text-neutral-900 shadow-sm">
           <div className="text-sm font-semibold">Session</div>
           <p className="mt-2 text-xs text-[rgb(var(--muted))]">
             Logout clears admin token from browser storage.

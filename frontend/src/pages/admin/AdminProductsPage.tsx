@@ -195,7 +195,7 @@ function categoryIdFromProduct(p: { category?: unknown }): string {
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-2xl border border-[rgb(var(--border))] bg-white p-5 shadow-sm">
+    <section className="rounded-2xl border border-[rgb(var(--border))] bg-white p-5 text-neutral-900 shadow-sm">
       <h2 className="text-sm font-semibold text-[rgb(var(--fg))]">{title}</h2>
       <div className="mt-4 space-y-3">{children}</div>
     </section>
@@ -1656,7 +1656,7 @@ export function AdminProductsPage() {
         </div>
       </div>
 
-      <section className="rounded-2xl border border-[rgb(var(--border))] bg-white p-5 shadow-sm">
+      <section className="rounded-2xl border border-[rgb(var(--border))] bg-white p-5 text-neutral-900 shadow-sm">
         <h2 className="text-sm font-semibold">Catalog</h2>
         <div className="mt-4 divide-y divide-[rgb(var(--border))]">
           {items === null ? (

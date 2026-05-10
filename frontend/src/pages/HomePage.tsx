@@ -4,8 +4,11 @@ import { Link } from 'react-router-dom'
 import { fetchCategories, fetchProducts } from '../api/catalog'
 import type { Category, Product } from '../types/catalog'
 import { CategoryCard } from '../components/CategoryCard'
+import { HomeCustomerFeedbackTicker } from '../components/HomeCustomerFeedbackTicker'
+import { HomeHeroBanner } from '../components/HomeHeroBanner'
 import { ProductCard } from '../components/ProductCard'
 import { Skeleton } from '../components/Skeleton'
+import uniikLogo from '../assets/uniik.png'
 
 const trustItems = [
   {
@@ -55,8 +58,6 @@ const trustItems = [
   },
 ]
 
-/** Hero banner image shown at top of homepage. */
-const HERO_IMAGE_SRC = '/images/hero-uniik.png'
 /** Shown below the “Sleep rooted in nature” block — `frontend/public/images/hero-after.png` */
 const HERO_AFTER_IMAGE_SRC = '/images/hero-after.png'
 /** After “Shop by category” — add `frontend/public/images/after-categories.png` (or .jpg). */
@@ -104,18 +105,7 @@ export function HomePage() {
         />
       </Helmet>
 
-      <section className="relative w-full overflow-hidden bg-black" aria-label="Hero image">
-        <div className="relative w-full aspect-[16/9]">
-          <img
-            src={HERO_IMAGE_SRC}
-            alt="Uniik premium outdoor living hero"
-            className="absolute inset-0 h-full w-full object-cover"
-            loading="eager"
-            fetchPriority="high"
-            decoding="async"
-          />
-        </div>
-      </section>
+      <HomeHeroBanner />
 
       <section className="bg-[rgb(var(--hero))]">
         <div className="container-page py-12 lg:py-16">
@@ -131,12 +121,9 @@ export function HomePage() {
             <div className="mt-10 flex flex-wrap justify-center gap-4">
               <Link
                 to="/products"
-                className="btn-primary !bg-[rgb(var(--accent-sale))] hover:!bg-[rgb(var(--accent-sale))]/90"
+                className="inline-flex items-center justify-center rounded-full bg-[#f5f0e8] px-8 py-3.5 text-sm font-semibold text-neutral-900 shadow-sm transition hover:bg-[#e8e2d6] hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900/35"
               >
                 Explore Collection
-              </Link>
-              <Link to="/categories" className="btn-secondary">
-                Contact Us
               </Link>
             </div>
           </div>
@@ -156,21 +143,23 @@ export function HomePage() {
         </section>
       ) : null}
 
-      <section className="border-y border-[rgb(var(--border))] bg-[rgb(var(--inverse))]">
+      <section className="border-y border-[rgb(var(--border))] bg-black">
         <div className="container-page py-14">
           <div className="mx-auto grid w-full max-w-6xl place-items-center justify-center gap-10 sm:grid-cols-2 lg:grid-cols-[repeat(auto-fit,minmax(16rem,1fr))]">
             {trustItems.map((item) => (
               <div key={item.title} className="flex w-full max-w-sm items-center justify-center gap-4">
-                <div className="text-[rgb(var(--brand))]">{item.icon}</div>
+                <div className="text-white">{item.icon}</div>
                 <div className="text-left">
-                  <div className="text-sm font-semibold text-[rgb(var(--fg))]">{item.title}</div>
-                  <div className="mt-1 text-sm leading-snug text-[rgb(var(--muted))]">{item.body}</div>
+                  <div className="text-sm font-semibold text-white">{item.title}</div>
+                  <div className="mt-1 text-sm leading-snug text-white/75">{item.body}</div>
                 </div>
               </div>
             ))}
           </div>
         </div>
       </section>
+
+      <HomeCustomerFeedbackTicker />
 
       <section className="container-page py-16">
         <div className="mx-auto max-w-2xl text-center">
@@ -229,7 +218,10 @@ export function HomePage() {
                 Most-loved outdoor furniture pieces chosen for design and durability.
               </p>
             </div>
-            <Link to="/products" className="btn-secondary shrink-0">
+            <Link
+              to="/products"
+              className="inline-flex shrink-0 items-center justify-center rounded-full bg-[#f5f0e8] px-8 py-3.5 text-sm font-semibold text-neutral-900 shadow-sm transition hover:bg-[#e8e2d6] hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900/35"
+            >
               Shop all
             </Link>
           </div>
@@ -246,32 +238,37 @@ export function HomePage() {
       </section>
 
       <section className="container-page py-16">
-        <div className="grid gap-6 lg:grid-cols-3">
-          <div className="rounded-3xl border border-[rgb(var(--border))] bg-[rgb(var(--inverse))] p-8 shadow-sm">
-            <h3 className="text-lg font-semibold">About Uniik</h3>
-            <p className="mt-2 text-sm leading-relaxed text-[rgb(var(--muted))]">
-              Uniik creates premium outdoor furniture designed for modern living. From elegant patio seating to durable
-              outdoor solutions, every piece is crafted with attention to comfort, strength, and design.
-            </p>
-            <div className="mt-6 flex flex-wrap gap-2">
-              <span className="rounded-full bg-[rgb(var(--surface))] px-3 py-1.5 text-xs font-semibold text-[rgb(var(--brand))] ring-1 ring-[rgb(var(--border))]">
-                Premium Finish
-              </span>
-              <span className="rounded-full bg-[rgb(var(--surface))] px-3 py-1.5 text-xs font-semibold text-[rgb(var(--brand))] ring-1 ring-[rgb(var(--border))]">
-                Outdoor Ready
-              </span>
+        <div className="overflow-hidden rounded-3xl border border-white/20 bg-black px-6 py-11 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] sm:px-10 lg:px-14 lg:py-14">
+          <div className="grid items-center gap-11 lg:grid-cols-2 lg:gap-16">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/70">Our story</p>
+              <p className="mt-4 font-header text-2xl font-semibold leading-snug text-white sm:text-3xl lg:text-[2.125rem] lg:leading-[1.2]">
+                The evenings that matter don&apos;t stay indoors—they drift into lamplight on the terrace, laughter spilling past
+                the last chair you meant to fold away.
+              </p>
+              <p className="mt-5 text-sm leading-relaxed text-white/80">
+                We started Uniik for those unhurried hours: monsoon mist on a railing, a café courtyard filling up again after
+                rain, a villa lawn where guests linger barefoot. Outdoor furniture should honour that softness—and survive every
+                season India asks of it.
+              </p>
+              <p className="mt-4 text-sm leading-relaxed text-white/65">
+                Every weld, weave, and finish is chosen so beauty isn&apos;t fragile: fewer replacements, quieter maintenance,
+                silhouettes that belong in open air for years.
+              </p>
+              <Link
+                to="/about"
+                className="mt-8 inline-flex items-center justify-center rounded-full bg-[#f5f0e8] px-8 py-3.5 text-sm font-semibold text-neutral-900 shadow-sm transition hover:bg-[#e8e2d6] hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900/35"
+              >
+                Read more
+              </Link>
             </div>
-          </div>
-          <div className="rounded-3xl border border-[rgb(var(--border))] bg-[rgb(var(--inverse))] p-8 shadow-sm lg:col-span-2">
-            <h3 className="text-lg font-semibold">Testimonials</h3>
-            <div className="mt-4 grid gap-4 sm:grid-cols-2">
-              <blockquote className="rounded-2xl bg-[rgb(var(--surface))] p-5 text-sm leading-relaxed text-[rgb(var(--muted))]">
-                "Uniik transformed our patio with elegant furniture that looks premium and feels incredibly sturdy."
-              </blockquote>
-              <blockquote className="rounded-2xl bg-[rgb(var(--surface))] p-5 text-sm leading-relaxed text-[rgb(var(--muted))]">
-                "The craftsmanship is exceptional - weather-resistant, comfortable, and perfect for modern outdoor
-                spaces."
-              </blockquote>
+            <div className="flex justify-center lg:justify-end">
+              <img
+                src={uniikLogo}
+                alt="Uniik"
+                className="h-36 w-auto max-w-[min(100%,20rem)] object-contain opacity-[0.98] sm:h-44 lg:h-52 xl:h-60"
+                decoding="async"
+              />
             </div>
           </div>
         </div>
