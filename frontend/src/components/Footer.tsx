@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { fetchSiteSettings } from '../api/site'
-import footerLogo from '../assets/footerlogo.jpeg'
+import footerLogo from '../assets/uniik.png'
 
 const FOOTER_CALL_DISPLAY = '9740144811'
 const FOOTER_CALL_TEL = '+919740144811'
@@ -26,11 +26,11 @@ function IconPhone(props: React.SVGProps<SVGSVGElement>) {
 }
 
 export function Footer() {
-  const [contactEmail, setContactEmail] = useState('support@cozyfoam.in')
+  const [contactEmail, setContactEmail] = useState('support@uniik.in')
 
   useEffect(() => {
     fetchSiteSettings()
-      .then((s) => setContactEmail(s.contactEmail || 'support@cozyfoam.in'))
+      .then((s) => setContactEmail(s.contactEmail || 'support@uniik.in'))
       .catch(() => {})
   }, [])
 
@@ -39,10 +39,10 @@ export function Footer() {
       <div className="container-page py-14">
         <div className="grid items-start gap-10 md:grid-cols-2 lg:grid-cols-4 lg:gap-x-8 xl:gap-x-10">
           <div className="lg:col-span-1">
-            <Link to="/" className="inline-flex w-full max-w-md items-start" aria-label="CozyFoam home">
+            <Link to="/" className="inline-flex w-full max-w-md items-start" aria-label="Uniik home">
               <img
                 src={footerLogo}
-                alt="CozyFoam"
+                alt="Uniik"
                 className="h-24 w-auto max-w-full object-contain object-left sm:h-28 md:h-32"
               />
             </Link>
@@ -53,7 +53,7 @@ export function Footer() {
           <ul className="mt-4 space-y-3 text-sm">
             <li>
               <Link className="text-[rgb(var(--fg))] transition hover:text-[rgb(var(--brand))]" to="/products">
-                Mattresses
+                Outdoor Furniture
               </Link>
             </li>
             <li>
@@ -137,7 +137,7 @@ export function Footer() {
       </div>
       <div className="border-t border-[rgb(var(--border))]">
         <div className="container-page flex flex-col gap-2 py-6 text-xs text-[rgb(var(--muted))] sm:flex-row sm:items-center sm:justify-between">
-          <span>© {new Date().getFullYear()} CozyFoam. All rights reserved.</span>
+          <span>© {new Date().getFullYear()} Uniik. All rights reserved.</span>
           <span className="text-[rgb(var(--muted))]">India · Secure checkout</span>
         </div>
       </div>

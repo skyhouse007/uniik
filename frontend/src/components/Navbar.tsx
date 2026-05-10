@@ -1,11 +1,11 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { SignedIn, SignedOut, SignInButton, useClerk, useUser } from '@clerk/clerk-react'
 import { Fragment, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type SVGProps } from 'react'
 import { useAppSelector } from '../store/hooks'
 import { fetchSiteSettings, type SiteSettings } from '../api/site'
 import { fetchCategories } from '../api/catalog'
 import type { Category } from '../types/catalog'
-import cozyLogo from '../assets/Cozy.jpeg'
+import uniikLogo from '../assets/uniik.png'
 
 const ANNOUNCEMENT_CALL_DISPLAY = '9740144811'
 const ANNOUNCEMENT_CALL_TEL = '+919740144811'
@@ -329,6 +329,8 @@ function MegaMenuPanel({ cat }: { cat: CategoryNode }) {
 export function Navbar() {
   const { user } = useUser()
   const { signOut } = useClerk()
+  const navigate = useNavigate()
+  const location = useLocation()
   const DEFAULT_ANNOUNCEMENTS = useMemo(
     () => [
       'Natural latex & breathable foams — sleep closer to nature',
@@ -361,6 +363,13 @@ export function Navbar() {
   const cartLabel = useMemo(() => (itemCount > 99 ? '99+' : String(itemCount)), [itemCount])
   const wishlistLabel = useMemo(() => (wishlistCount > 99 ? '99+' : String(wishlistCount)), [wishlistCount])
   const customerName = user?.fullName ?? user?.firstName ?? 'Customer'
+  const [searchQuery, setSearchQuery] = useState('')
+
+  useEffect(() => {
+    if (location.pathname !== '/search') return
+    const q = new URLSearchParams(location.search).get('q') ?? ''
+    setSearchQuery(q)
+  }, [location.pathname, location.search])
 
   useEffect(() => {
     let alive = true
@@ -529,27 +538,29 @@ export function Navbar() {
   }
 
   const closeMobile = () => setMobileNavOpen(false)
+  const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const q = searchQuery.trim()
+    navigate(q ? `/search?q=${encodeURIComponent(q)}` : '/search')
+  }
 
   const categoryTriggerClass = (open: boolean) =>
     [
-      'inline-flex items-center whitespace-nowrap border-b-2 border-transparent pb-0.5 text-[15px] font-medium uppercase leading-none tracking-[0.08em] text-[rgb(var(--brand))] transition lg:text-[16px]',
-      'hover:border-current/25 hover:text-[rgb(var(--brand-hover))]',
-      open ? 'border-[rgb(var(--brand))]' : '',
+      'inline-flex items-center whitespace-nowrap border-b-2 border-transparent pb-0.5 text-[10px] font-medium uppercase leading-none tracking-[0.08em] text-black transition lg:text-[11px]',
+      'hover:border-current/25 hover:text-black/70',
+      open ? 'border-black' : '',
     ].join(' ')
-
-  const topNavLinkClass =
-    'inline-flex shrink-0 items-center whitespace-nowrap border-b-2 border-transparent pb-0.5 text-[15px] font-medium uppercase leading-none tracking-[0.08em] transition hover:border-current/25 hover:text-[rgb(var(--brand-hover))] lg:text-[16px]'
 
   return (
     <header
       ref={headerRef}
       className={[
-        'font-header sticky top-0 z-40 overflow-visible border-b border-[rgb(var(--border))] bg-[rgb(var(--inverse))]',
+        'font-header sticky top-0 z-40 overflow-visible border-b border-[rgb(var(--border))] bg-white',
         scrolled ? 'shadow-[0_10px_30px_rgba(0,0,0,0.06)]' : 'shadow-[0_1px_0_rgba(0,0,0,0.03)]',
       ].join(' ')}
     >
       <div
-        className="font-ui relative flex min-h-[2rem] items-center justify-center overflow-hidden bg-[rgb(var(--hero))] px-3 py-0.5 text-center text-[11px] font-medium tracking-[0.02em] text-[rgb(var(--accent-sale))] sm:min-h-[2.125rem] sm:text-[12px]"
+        className="font-ui relative flex min-h-[2rem] items-center justify-center overflow-hidden bg-[rgb(var(--hero))] px-3 py-0.5 text-center text-[11px] font-medium tracking-[0.02em] text-black sm:min-h-[2.125rem] sm:text-[12px]"
         onMouseEnter={() => setAnnouncementRotationPaused(true)}
         onMouseLeave={() => setAnnouncementRotationPaused(false)}
       >
@@ -569,11 +580,11 @@ export function Navbar() {
         </div>
       </div>
 
-      <div ref={megaAnchorRef} className="bg-[rgb(var(--inverse))]">
+      <div className="bg-white">
         <div className="container-page relative flex h-[80px] flex-nowrap items-center gap-2 sm:gap-4 lg:gap-5">
           <button
             type="button"
-            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[rgb(var(--brand))] md:hidden"
+            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-black md:hidden"
             aria-label="Open menu"
             onClick={() => setMobileNavOpen(true)}
           >
@@ -586,71 +597,47 @@ export function Navbar() {
             onClick={closeMobile}
           >
             <div className="flex h-12 w-36 shrink-0 items-center sm:h-12 sm:w-44 md:w-52 lg:h-14 lg:w-56 xl:w-64">
-              <img src={cozyLogo} alt="CozyFoam" className="-mt-1 h-full w-full object-contain md:object-left" />
+              <img src={uniikLogo} alt="Uniik" className="-mt-1 h-full w-full object-contain md:object-left" />
             </div>
           </Link>
 
-          <nav
-            className="relative z-0 hidden min-h-0 min-w-0 flex-1 items-center justify-center overflow-x-auto overflow-y-visible [-ms-overflow-style:none] [scrollbar-width:none] md:flex [&::-webkit-scrollbar]:hidden"
-            aria-label="Product categories"
-          >
-            <div className="flex w-max min-w-0 -translate-x-8 translate-y-[3px] flex-nowrap items-center justify-center gap-x-6 px-1 lg:-translate-x-10 lg:translate-y-[3px] lg:gap-x-8">
-              {categoryTree.length ? (
-                categoryTree.map((cat) => {
-                  const open = openMegaId === cat.id
-                  return (
-                    <div
-                      key={cat.id}
-                      className="relative flex shrink-0 items-center"
-                      style={{ zIndex: open ? 50 : undefined }}
-                      onMouseEnter={useHoverMega ? () => openMegaMenu(cat.id) : undefined}
-                      onMouseLeave={useHoverMega ? scheduleCloseMegaMenu : undefined}
-                    >
-                      <button
-                        type="button"
-                        aria-expanded={open}
-                        aria-haspopup="true"
-                        className={categoryTriggerClass(open)}
-                        onClick={() => {
-                          if (!useHoverMega) {
-                            setOpenMegaId((cur) => (cur === cat.id ? null : cat.id))
-                            requestAnimationFrame(() => updateMegaTop())
-                          }
-                        }}
-                      >
-                        {cat.label}
-                      </button>
-                    </div>
-                  )
-                })
-              ) : (
-                <Link
-                  to="/categories"
-                  className="inline-flex items-center whitespace-nowrap text-sm font-semibold leading-none text-[rgb(var(--brand))] underline-offset-4 hover:underline lg:text-lg"
+          <div className="hidden min-w-0 flex-1 md:flex md:justify-center">
+            <form onSubmit={handleSearchSubmit} className="w-full max-w-2xl">
+              <label htmlFor="nav-search" className="sr-only">
+                Search products
+              </label>
+              <div className="flex h-11 items-center rounded-none border border-[rgb(var(--border))] bg-[rgb(var(--surface))] px-4">
+                <svg
+                  viewBox="0 0 24 24"
+                  width={18}
+                  height={18}
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={1.75}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden
+                  className="shrink-0 text-[rgb(var(--muted))]"
                 >
-                  Shop all
-                </Link>
-              )}
-              <Link
-                to="/categories"
-                className={[topNavLinkClass, 'text-[rgb(var(--brand))]'].join(' ')}
-              >
-                Explore
-              </Link>
-              <Link
-                to="/products"
-                className={[topNavLinkClass, 'font-medium text-[rgb(var(--accent-sale))] hover:text-[rgb(var(--accent-sale))]/90'].join(' ')}
-              >
-                Sale
-              </Link>
-            </div>
-          </nav>
+                  <circle cx="11" cy="11" r="7" />
+                  <path d="m20 20-3.5-3.5" />
+                </svg>
+                <input
+                  id="nav-search"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search products..."
+                  className="w-full bg-transparent px-3 text-sm text-[rgb(var(--fg))] outline-none placeholder:text-[rgb(var(--muted))]"
+                />
+              </div>
+            </form>
+          </div>
 
           <div className="ml-auto flex shrink-0 items-center gap-2 self-center">
             <div className="flex items-center gap-0 sm:gap-0.5">
               <Link
                 to="/wishlist"
-                className="relative inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[rgb(var(--brand))] transition hover:bg-[rgb(var(--surface))] hover:text-[rgb(var(--brand-hover))]"
+                className="relative inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-black transition hover:bg-[rgb(var(--surface))] hover:text-black/70"
                 aria-label={`Wishlist, ${wishlistCount} items`}
               >
                 <IconHeart />
@@ -673,7 +660,7 @@ export function Navbar() {
                   aria-haspopup="true"
                   aria-label={`Call ${ANNOUNCEMENT_CALL_DISPLAY}`}
                   className={[
-                    'inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[rgb(var(--brand))] transition hover:bg-[rgb(var(--surface))] hover:text-[rgb(var(--brand-hover))]',
+                    'inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-black transition hover:bg-[rgb(var(--surface))] hover:text-black/70',
                     phoneMenuOpen ? 'bg-[rgb(var(--surface))]' : '',
                   ].join(' ')}
                   onClick={() => {
@@ -713,7 +700,7 @@ export function Navbar() {
                   <button
                     type="button"
                     aria-label="Sign in"
-                    className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[rgb(var(--brand))] transition hover:bg-[rgb(var(--surface))] hover:text-[rgb(var(--brand-hover))]"
+                    className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-black transition hover:bg-[rgb(var(--surface))] hover:text-black/70"
                   >
                     <IconUser />
                   </button>
@@ -733,7 +720,7 @@ export function Navbar() {
                     aria-haspopup="true"
                     aria-label={`Account, ${customerName}`}
                     className={[
-                      'inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[rgb(var(--brand))] transition hover:bg-[rgb(var(--surface))] hover:text-[rgb(var(--brand-hover))]',
+                      'inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-black transition hover:bg-[rgb(var(--surface))] hover:text-black/70',
                       accountMenuOpen ? 'bg-[rgb(var(--surface))]' : '',
                     ].join(' ')}
                     onClick={() => {
@@ -782,7 +769,7 @@ export function Navbar() {
 
               <Link
                 to="/cart"
-                className="relative inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[rgb(var(--brand))] transition hover:bg-[rgb(var(--surface))] hover:text-[rgb(var(--brand-hover))]"
+                className="relative inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-black transition hover:bg-[rgb(var(--surface))] hover:text-black/70"
                 aria-label={`Shopping bag, ${itemCount} items`}
               >
                 <IconBag />
@@ -794,6 +781,54 @@ export function Navbar() {
               </Link>
             </div>
           </div>
+        </div>
+      </div>
+
+      <div ref={megaAnchorRef} className="hidden border-t border-[rgb(var(--border))] bg-white md:block">
+        <div className="container-page relative">
+          <nav
+            className="relative z-0 flex min-h-0 min-w-0 items-center justify-center overflow-x-auto overflow-y-visible py-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            aria-label="All categories"
+          >
+            <div className="mx-auto flex w-max min-w-0 flex-nowrap items-center gap-x-6 px-1 lg:gap-x-8">
+              {categoryTree.length ? (
+                categoryTree.map((cat) => {
+                  const open = openMegaId === cat.id
+                  return (
+                    <div
+                      key={cat.id}
+                      className="relative flex shrink-0 items-center"
+                      style={{ zIndex: open ? 50 : undefined }}
+                      onMouseEnter={useHoverMega ? () => openMegaMenu(cat.id) : undefined}
+                      onMouseLeave={useHoverMega ? scheduleCloseMegaMenu : undefined}
+                    >
+                      <button
+                        type="button"
+                        aria-expanded={open}
+                        aria-haspopup="true"
+                        className={categoryTriggerClass(open)}
+                        onClick={() => {
+                          if (!useHoverMega) {
+                            setOpenMegaId((cur) => (cur === cat.id ? null : cat.id))
+                            requestAnimationFrame(() => updateMegaTop())
+                          }
+                        }}
+                      >
+                        {cat.label}
+                      </button>
+                    </div>
+                  )
+                })
+              ) : (
+                <Link
+                  to="/categories"
+                  className="inline-flex items-center whitespace-nowrap text-sm font-semibold leading-none text-[rgb(var(--brand))] underline-offset-4 hover:underline lg:text-lg"
+                >
+                  Shop all
+                </Link>
+              )}
+            </div>
+          </nav>
         </div>
       </div>
 
