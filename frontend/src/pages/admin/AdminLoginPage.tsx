@@ -18,7 +18,17 @@ export function AdminLoginPage() {
       setAdminToken(res.token)
       window.location.href = '/admin'
     } catch (e: any) {
-      setError(e?.response?.data?.error ?? 'Login failed')
+      const status = e?.response?.status
+      const dataErr = e?.response?.data?.error
+      let msg = typeof dataErr === 'string' ? dataErr : ''
+      if (!msg && e?.code === 'ERR_NETWORK') {
+        msg =
+          'Cannot reach the API. For local admin credentials from backend/.env, set VITE_API_BASE_URL=http://localhost:4000/api in frontend/.env and restart the dev server.'
+      }
+      if (!msg && status === 503) {
+        msg = 'Server admin auth is not configured (set ADMIN_EMAIL, ADMIN_PASSWORD, ADMIN_JWT_SECRET on the API host).'
+      }
+      setError(msg || e?.message || 'Login failed')
       setBusy(false)
     }
   }

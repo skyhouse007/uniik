@@ -42,18 +42,25 @@
   }
 }
 
-@keyframes announcement-bar-in {
+@keyframes home-feedback-marquee {
   from {
-    opacity: 0;
-    transform: translateY(0.2rem);
+    transform: translate3d(0, 0, 0);
   }
   to {
-    opacity: 1;
-    transform: translateY(0);
+    transform: translate3d(-50%, 0, 0);
   }
 }
 
-@keyframes home-feedback-marquee {
+@keyframes premium-announcement-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes home-trust-banner-marquee {
   from {
     transform: translate3d(0, 0, 0);
   }
@@ -75,16 +82,28 @@
     font-family: var(--font-ui);
   }
 
-  .announcement-bar-item {
-    animation: announcement-bar-in 0.45s ease-out both;
-  }
-
   .animate-home-feedback-marquee {
     animation: home-feedback-marquee 72s linear infinite;
   }
 
+  .animate-premium-announcement-marquee {
+    animation: premium-announcement-marquee 140s linear infinite;
+  }
+
+  .animate-home-trust-banner-marquee {
+    animation: home-trust-banner-marquee 38s linear infinite;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .animate-home-feedback-marquee {
+      animation: none;
+    }
+
+    .animate-premium-announcement-marquee {
+      animation: none;
+    }
+
+    .animate-home-trust-banner-marquee {
       animation: none;
     }
   }
@@ -104,5 +123,38 @@
 
   .btn-secondary {
     @apply inline-flex items-center justify-center rounded-full border border-[rgb(var(--border))] bg-[rgb(var(--inverse))] px-8 py-3.5 text-sm font-semibold text-[rgb(var(--fg))] shadow-sm transition hover:border-[rgb(var(--muted))] hover:shadow;
+  }
+
+  /* Admin workspace (/admin/* inside AdminShell) — dark panels & fields */
+  .admin-card {
+    @apply rounded-3xl border border-white/[0.12] bg-neutral-950 p-5 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.04)];
+  }
+
+  .admin-card-soft {
+    @apply rounded-2xl border border-white/10 bg-black/55 text-white;
+  }
+
+  .admin-field {
+    @apply rounded-xl border border-white/20 bg-black px-3 py-2 text-sm text-white outline-none placeholder:text-white/40 focus:border-white/45;
+  }
+
+  .admin-field-lg {
+    @apply rounded-lg border border-white/20 bg-black px-2 py-1.5 text-sm text-white outline-none placeholder:text-white/40 focus:border-white/45;
+  }
+
+  .admin-alert-error {
+    @apply rounded-xl border border-red-500/35 bg-red-950/50 px-4 py-3 text-sm text-red-200;
+  }
+
+  .admin-alert-success {
+    @apply rounded-xl border border-emerald-500/35 bg-emerald-950/50 px-4 py-3 text-sm text-emerald-200;
+  }
+
+  .admin-btn-outline {
+    @apply rounded-xl border border-white/25 bg-transparent px-4 py-2 text-xs font-semibold text-white transition hover:bg-white/10;
+  }
+
+  .admin-btn-solid {
+    @apply rounded-xl border border-white/15 bg-white px-4 py-2 text-xs font-semibold text-neutral-900 transition hover:bg-white/90;
   }
 }

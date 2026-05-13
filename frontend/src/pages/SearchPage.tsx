@@ -39,17 +39,17 @@ export function SearchPage() {
   return (
     <div className="container-page py-8">
       <Helmet>
-        <title>Search — CozyFoam</title>
-        <meta name="description" content="Real-time search for mattresses, sizes, and brands." />
+        <title>Search — Uniik</title>
+        <meta name="description" content="Real-time search for products, sizes, and brands." />
       </Helmet>
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <div className="text-xl font-extrabold tracking-tight">Search</div>
+          <div className="font-header text-xl font-extrabold tracking-tight text-[rgb(var(--fg))]">Search</div>
           <div className="mt-1 text-sm text-[rgb(var(--muted))]">Real-time product search</div>
         </div>
       </div>
 
-      <div className="mt-5 rounded-2xl border border-[rgb(var(--border))] bg-white p-3 shadow-sm">
+      <div className="mt-5 rounded-2xl border border-white/12 bg-black/45 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-sm">
         <input
           value={q}
           onChange={(e) => {
@@ -62,8 +62,8 @@ export function SearchPage() {
               return p
             })
           }}
-          placeholder="Search mattresses, brands, sizes…"
-          className="w-full bg-transparent px-2 py-2 text-sm outline-none placeholder:text-[rgb(var(--muted))]"
+          placeholder="Search products, brands, sizes…"
+          className="w-full bg-transparent px-2 py-2 text-sm text-white outline-none placeholder:text-white/40"
         />
       </div>
 
@@ -73,7 +73,7 @@ export function SearchPage() {
         ) : items.length ? (
           items.map((p) => <ProductCard key={p._id} product={p} />)
         ) : (
-          <div className="rounded-2xl border border-[rgb(var(--border))] bg-white p-6 text-sm text-[rgb(var(--muted))]">
+          <div className="rounded-2xl border border-white/12 bg-black/45 p-6 text-sm text-[rgb(var(--muted))] backdrop-blur-sm">
             {query ? 'No results found.' : 'Type to search.'}
           </div>
         )}

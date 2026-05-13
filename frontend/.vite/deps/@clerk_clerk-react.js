@@ -216,7 +216,6 @@ var ClerkRuntimeError = class ClerkRuntimeError extends ClerkError {
 createErrorTypeGuard(ClerkRuntimeError);
 //#endregion
 //#region node_modules/@clerk/shared/dist/runtime/authorization-D2ans7vW.mjs
-var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var TYPES_TO_OBJECTS = {
 	strict_mfa: {
 		afterMinutes: 10,
@@ -584,6 +583,7 @@ function eventMethodCalled(method, payload) {
 }
 //#endregion
 //#region node_modules/@clerk/shared/dist/runtime/authorization-errors-CS1pNy8i.mjs
+var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var REVERIFICATION_REASON = "reverification-error";
 var reverificationError = (missingConfig) => ({ clerk_error: {
 	type: "forbidden",

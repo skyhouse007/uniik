@@ -1,3 +1,4 @@
+import type { SVGProps } from 'react'
 import type { Product, ProductVariant } from '../../types/catalog'
 import {
   buildSimpleCustomVirtualVariant,
@@ -17,6 +18,43 @@ function normCat(raw: string | undefined) {
 
 function categoryButtonLabel(c: string) {
   return normCat(c) === '' ? 'Standard' : c
+}
+
+/** Mirrors Footer / Navbar support line for customization inquiries. */
+const CUSTOMISATION_SUPPORT_TEL = '+911234567890'
+const CUSTOMISATION_SUPPORT_DISPLAY = '+91 12345 67890'
+
+function IconPhoneSmall(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden {...props}>
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"
+      />
+    </svg>
+  )
+}
+
+function CustomisationCallout() {
+  return (
+    <div className="rounded-xl border border-amber-500/25 bg-gradient-to-br from-amber-500/[0.08] to-transparent px-4 py-3">
+      <div className="text-[11px] font-bold uppercase tracking-wide text-amber-200/90">
+        Customisation
+      </div>
+      <p className="mt-1 text-xs leading-relaxed text-[rgb(var(--muted))]">
+        Need a different shape, stitching, combo, or something not listed? Our team can help with a bespoke
+        quote.
+      </p>
+      <a
+        href={`tel:${CUSTOMISATION_SUPPORT_TEL}`}
+        className="mt-3 inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-4 py-2 text-xs font-semibold text-white transition hover:border-white/40 hover:bg-white/10"
+      >
+        <IconPhoneSmall className="h-3.5 w-3.5 shrink-0 opacity-90" />
+        Call for customisation ({CUSTOMISATION_SUPPORT_DISPLAY})
+      </a>
+    </div>
+  )
 }
 
 /** Show standard types first, then others A–Z, Custom last (matches common mattress flows). */
@@ -202,7 +240,7 @@ export function VariantSelector({
             value={customLength}
             onChange={(e) => onCustomLengthChange(e.target.value)}
             onBlur={() => clampLwOnBlur(customTemplate, customLength, customWidth, onCustomLengthChange, onCustomWidthChange)}
-            className="w-28 rounded-xl border border-[rgb(var(--border))] bg-white px-3 py-2 text-sm"
+            className="w-28 rounded-xl border border-white/20 bg-black px-3 py-2 text-sm text-white outline-none focus:border-white/45"
           />
         </div>
         <span className="pb-2 text-sm text-[rgb(var(--muted))]">×</span>
@@ -219,7 +257,7 @@ export function VariantSelector({
             value={customWidth}
             onChange={(e) => onCustomWidthChange(e.target.value)}
             onBlur={() => clampLwOnBlur(customTemplate, customLength, customWidth, onCustomLengthChange, onCustomWidthChange)}
-            className="w-28 rounded-xl border border-[rgb(var(--border))] bg-white px-3 py-2 text-sm"
+            className="w-28 rounded-xl border border-white/20 bg-black px-3 py-2 text-sm text-white outline-none focus:border-white/45"
           />
         </div>
       </div>
@@ -227,7 +265,7 @@ export function VariantSelector({
   )
 
   return (
-    <div className="rounded-2xl border border-[rgb(var(--border))] bg-white p-5 shadow-sm">
+    <div className="rounded-2xl border border-white/12 bg-black/45 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] backdrop-blur-sm">
       <div className="text-sm font-semibold text-[rgb(var(--fg))]">Choose configuration</div>
       <p className="mt-1 text-xs leading-relaxed text-[rgb(var(--muted))]">
         {useCats
@@ -250,8 +288,8 @@ export function VariantSelector({
                     className={[
                       'rounded-full border px-4 py-2 text-xs font-semibold transition',
                       normCat(selectedVariantCategory) === c
-                        ? 'border-[rgb(var(--brand))] bg-[rgb(var(--surface))] text-[rgb(var(--brand))]'
-                        : 'border-[rgb(var(--border))] bg-white hover:border-[rgb(var(--muted))]',
+                        ? 'border-white bg-[rgb(var(--surface))] text-white'
+                        : 'border-white/20 bg-black/35 text-white/90 hover:border-white/45',
                     ].join(' ')}
                   >
                     {label}
@@ -261,14 +299,14 @@ export function VariantSelector({
             </div>
           </div>
 
-          <div className="mt-5 rounded-xl border border-[rgb(var(--border))] border-l-[3px] border-l-[rgb(var(--brand))] bg-[rgb(var(--surface))] p-4">
+          <div className="mt-5 rounded-xl border border-white/12 border-l-[3px] border-l-white bg-black/35 p-4">
             <div className="text-[11px] font-bold uppercase tracking-wide text-[rgb(var(--muted))]">Variants</div>
             <p className="mt-1 text-xs text-[rgb(var(--muted))]">
               Showing options for{' '}
               <span className="font-semibold text-[rgb(var(--fg))]">{activeCategoryLabel}</span>.
             </p>
 
-            <div className="mt-4 space-y-5 border-t border-[rgb(var(--border))] pt-4">
+            <div className="mt-4 space-y-5 border-t border-white/10 pt-4">
               {!customOnly ? (
                 <div>
                   <div className="text-[11px] font-semibold uppercase tracking-wide text-[rgb(var(--muted))]">
@@ -283,8 +321,8 @@ export function VariantSelector({
                         className={[
                           'rounded-full border px-4 py-2 text-xs font-semibold transition',
                           selectedSize === s
-                            ? 'border-[rgb(var(--brand))] bg-white text-[rgb(var(--brand))]'
-                            : 'border-[rgb(var(--border))] bg-white hover:border-[rgb(var(--muted))]',
+                            ? 'border-white bg-white text-neutral-900 shadow-sm'
+                            : 'border-white/20 bg-black/35 text-white/90 hover:border-white/45',
                         ].join(' ')}
                       >
                         {s}
@@ -295,6 +333,8 @@ export function VariantSelector({
               ) : (
                 customLwBlock
               )}
+
+              <CustomisationCallout />
 
               <div>
                 <div className="text-[11px] font-semibold uppercase tracking-wide text-[rgb(var(--muted))]">
@@ -311,13 +351,13 @@ export function VariantSelector({
                         className={[
                           'rounded-full border px-4 py-2 text-xs font-semibold transition',
                           selectedThickness === t
-                            ? 'border-[rgb(var(--brand))] bg-white text-[rgb(var(--brand))]'
-                            : 'border-[rgb(var(--border))] bg-white hover:border-[rgb(var(--muted))]',
+                            ? 'border-white bg-white text-neutral-900 shadow-sm'
+                            : 'border-white/20 bg-black/35 text-white/90 hover:border-white/45',
                         ].join(' ')}
                       >
                         <span>{t}</span>
                         {v?.isPopular ? (
-                          <span className="ml-2 rounded-full bg-[rgb(var(--brand))] px-2 py-0.5 text-[10px] font-bold text-white">
+                          <span className="ml-2 rounded-full bg-white px-2 py-0.5 text-[10px] font-bold text-neutral-900">
                             Popular
                           </span>
                         ) : null}
@@ -343,8 +383,8 @@ export function VariantSelector({
                     className={[
                       'rounded-full border px-4 py-2 text-xs font-semibold transition',
                       selectedSize === s
-                        ? 'border-[rgb(var(--brand))] bg-[rgb(var(--surface))] text-[rgb(var(--brand))]'
-                        : 'border-[rgb(var(--border))] bg-white hover:border-[rgb(var(--muted))]',
+                        ? 'border-white bg-white text-neutral-900 shadow-sm'
+                        : 'border-white/20 bg-black/35 text-white/90 hover:border-white/45',
                     ].join(' ')}
                   >
                     {s}
@@ -353,9 +393,12 @@ export function VariantSelector({
               </div>
             </div>
           ) : (
-            <div className="rounded-xl border border-[rgb(var(--border))] border-l-[3px] border-l-[rgb(var(--brand))] bg-[rgb(var(--surface))] p-4">
+            <div className="rounded-xl border border-white/12 border-l-[3px] border-l-white bg-black/35 p-4">
               {customLwBlock}
-              <div className={customLwBlock ? 'mt-5 border-t border-[rgb(var(--border))] pt-4' : ''}>
+              <div className={customLwBlock ? 'mt-4' : 'mt-0'}>
+                <CustomisationCallout />
+              </div>
+              <div className={customLwBlock ? 'mt-5 border-t border-white/10 pt-4' : 'mt-4 border-t border-white/10 pt-4'}>
                 <div className="text-[11px] font-semibold uppercase tracking-wide text-[rgb(var(--muted))]">
                   Thickness
                 </div>
@@ -372,13 +415,13 @@ export function VariantSelector({
                         className={[
                           'rounded-full border px-4 py-2 text-xs font-semibold transition',
                           selectedThickness === t
-                            ? 'border-[rgb(var(--brand))] bg-[rgb(var(--surface))] text-[rgb(var(--brand))]'
-                            : 'border-[rgb(var(--border))] bg-white hover:border-[rgb(var(--muted))]',
+                            ? 'border-white bg-white text-neutral-900 shadow-sm'
+                            : 'border-white/20 bg-black/35 text-white/90 hover:border-white/45',
                         ].join(' ')}
                       >
                         <span>{t}</span>
                         {v?.isPopular ? (
-                          <span className="ml-2 rounded-full bg-[rgb(var(--brand))] px-2 py-0.5 text-[10px] font-bold text-white">
+                          <span className="ml-2 rounded-full bg-white px-2 py-0.5 text-[10px] font-bold text-neutral-900">
                             Popular
                           </span>
                         ) : null}
@@ -391,38 +434,42 @@ export function VariantSelector({
           )}
 
           {!customOnly ? (
-            <div>
-              <div className="text-[11px] font-semibold uppercase tracking-wide text-[rgb(var(--muted))]">
-                Thickness
+            <>
+              <CustomisationCallout />
+
+              <div>
+                <div className="text-[11px] font-semibold uppercase tracking-wide text-[rgb(var(--muted))]">
+                  Thickness
+                </div>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {uniqueThicknesses.map((t) => {
+                    const v = effectivePool.find(
+                      (x) => x.thickness === t && (customOnly || x.size === selectedSize),
+                    )
+                    return (
+                      <button
+                        key={t}
+                        type="button"
+                        onClick={() => onThicknessChange(t)}
+                        className={[
+                          'rounded-full border px-4 py-2 text-xs font-semibold transition',
+                          selectedThickness === t
+                            ? 'border-white bg-white text-neutral-900 shadow-sm'
+                            : 'border-white/20 bg-black/35 text-white/90 hover:border-white/45',
+                        ].join(' ')}
+                      >
+                        <span>{t}</span>
+                        {v?.isPopular ? (
+                          <span className="ml-2 rounded-full bg-white px-2 py-0.5 text-[10px] font-bold text-neutral-900">
+                            Popular
+                          </span>
+                        ) : null}
+                      </button>
+                    )
+                  })}
+                </div>
               </div>
-              <div className="mt-2 flex flex-wrap gap-2">
-                {uniqueThicknesses.map((t) => {
-                  const v = effectivePool.find(
-                    (x) => x.thickness === t && (customOnly || x.size === selectedSize),
-                  )
-                  return (
-                    <button
-                      key={t}
-                      type="button"
-                      onClick={() => onThicknessChange(t)}
-                      className={[
-                        'rounded-full border px-4 py-2 text-xs font-semibold transition',
-                        selectedThickness === t
-                          ? 'border-[rgb(var(--brand))] bg-[rgb(var(--surface))] text-[rgb(var(--brand))]'
-                          : 'border-[rgb(var(--border))] bg-white hover:border-[rgb(var(--muted))]',
-                      ].join(' ')}
-                    >
-                      <span>{t}</span>
-                      {v?.isPopular ? (
-                        <span className="ml-2 rounded-full bg-[rgb(var(--brand))] px-2 py-0.5 text-[10px] font-bold text-white">
-                          Popular
-                        </span>
-                      ) : null}
-                    </button>
-                  )
-                })}
-              </div>
-            </div>
+            </>
           ) : null}
         </div>
       )}

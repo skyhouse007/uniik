@@ -24,7 +24,12 @@ export function createApp() {
   const app = express()
 
   app.use(helmet())
-  app.use(cors({ origin: true }))
+  app.use(
+    cors({
+      origin: true,
+      allowedHeaders: ['Content-Type', 'Authorization', 'X-Admin-Token', 'Cache-Control', 'Pragma'],
+    }),
+  )
   app.use(express.json({ limit: '1mb' }))
   app.use(morgan('dev'))
 
@@ -33,10 +38,10 @@ export function createApp() {
 
   app.get('/health', (req, res) => res.json({ ok: true }))
 
-  // Public catalog APIs (do not require Clerk)
-  // Note: products router also contains a customer review POST route which requires Clerk;
-  // maybeClerk becomes a no-op when Clerk is not configured.
-  app.use('/api/products', maybeClerk, productsRouter)
+  // Catalog APIs — do NOT run Clerk here: admin panel sends `Authorization: Bearer <admin JWT>`
+  // for POST/PUT/DELETE and Clerk would treat that header as a session token and break listing/creates.
+  // Clerk runs only on `POST /api/products/:id/reviews` inside `products.js`.
+  app.use('/api/products', productsRouter)
   app.post('/api/categories/reorder', requireAdminToken, postCategoriesReorder)
   app.use('/api/categories', categoriesRouter)
   // Customer-authenticated APIs (require Clerk when configured)

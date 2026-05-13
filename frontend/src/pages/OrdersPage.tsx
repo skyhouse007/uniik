@@ -34,11 +34,11 @@ export function OrdersPage() {
   return (
     <div className="container-page py-8">
       <Helmet>
-        <title>Orders — CozyFoam</title>
+        <title>Orders — Uniik</title>
         <meta name="description" content="View your order history and order statuses." />
       </Helmet>
       <div>
-        <div className="text-xl font-extrabold tracking-tight">Your orders</div>
+        <div className="font-header text-xl font-extrabold tracking-tight text-[rgb(var(--fg))]">Your orders</div>
         <div className="mt-1 text-sm text-[rgb(var(--muted))]">Order history & status</div>
       </div>
 
@@ -47,23 +47,26 @@ export function OrdersPage() {
           Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-28 rounded-2xl" />)
         ) : items.length ? (
           items.map((o) => (
-            <div key={o._id} className="rounded-2xl border border-[rgb(var(--border))] bg-white p-5 shadow-sm">
+            <div
+              key={o._id}
+              className="rounded-2xl border border-white/12 bg-black/45 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] backdrop-blur-sm"
+            >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <div className="text-sm font-semibold">Order #{o._id.slice(-8)}</div>
+                  <div className="text-sm font-semibold text-[rgb(var(--fg))]">Order #{o._id.slice(-8)}</div>
                   <div className="mt-1 text-xs text-[rgb(var(--muted))]">
                     {new Date(o.createdAt).toLocaleString()}
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-sm font-semibold">{formatMoney(o.totalAmount)}</div>
+                  <div className="text-sm font-semibold text-[rgb(var(--fg))]">{formatMoney(o.totalAmount)}</div>
                   <div className="mt-1 text-xs text-[rgb(var(--muted))]">
                     {o.paymentStatus.toUpperCase()} • {o.orderStatus.toUpperCase()}
                   </div>
                 </div>
               </div>
 
-              <div className="mt-4 grid gap-2">
+              <div className="mt-4 grid gap-2 border-t border-white/10 pt-4">
                 {o.products.slice(0, 3).map((p, idx) => (
                   <div key={idx} className="flex items-center justify-between gap-3 text-sm">
                     <div className="min-w-0 truncate text-[rgb(var(--muted))]">
@@ -72,7 +75,7 @@ export function OrdersPage() {
                         ? ` (${[p.selectedVariantCategory, p.selectedSize || p.size, p.selectedThickness].filter(Boolean).join(' · ')})`
                         : ''}
                     </div>
-                    <div className="font-semibold">{formatMoney(p.unitPrice * p.quantity)}</div>
+                    <div className="font-semibold text-[rgb(var(--fg))]">{formatMoney(p.unitPrice * p.quantity)}</div>
                   </div>
                 ))}
                 {o.products.length > 3 ? (
@@ -82,7 +85,7 @@ export function OrdersPage() {
             </div>
           ))
         ) : (
-          <div className="rounded-2xl border border-[rgb(var(--border))] bg-white p-6 text-sm text-[rgb(var(--muted))]">
+          <div className="rounded-2xl border border-white/12 bg-black/45 p-6 text-sm text-[rgb(var(--muted))] backdrop-blur-sm">
             No orders yet.
           </div>
         )}
@@ -90,4 +93,3 @@ export function OrdersPage() {
     </div>
   )
 }
-

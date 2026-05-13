@@ -5,7 +5,11 @@ import { fetchCategories, fetchProducts } from '../api/catalog'
 import type { Category, Product } from '../types/catalog'
 import { CategoryCard } from '../components/CategoryCard'
 import { HomeCustomerFeedbackTicker } from '../components/HomeCustomerFeedbackTicker'
+import { HomeFaqSection } from '../components/HomeFaqSection'
 import { HomeHeroBanner } from '../components/HomeHeroBanner'
+import { HomeStoreLocations } from '../components/HomeStoreLocations'
+import { HomeTrustBannerMarquee } from '../components/HomeTrustBannerMarquee'
+import { HomeWhatsAppFloat } from '../components/HomeWhatsAppFloat'
 import { ProductCard } from '../components/ProductCard'
 import { Skeleton } from '../components/Skeleton'
 import uniikLogo from '../assets/uniik.png'
@@ -63,6 +67,14 @@ const HERO_AFTER_IMAGE_SRC = '/images/hero-after.png'
 /** After “Shop by category” — add `frontend/public/images/after-categories.png` (or .jpg). */
 const AFTER_CATEGORIES_IMAGE_SRC = '/images/after-categories.png'
 
+/** Shown when the API returns no categories (empty DB or offline) so this block stays useful. */
+const FALLBACK_CATEGORY_TILES = [
+  { title: 'Outdoor seating', to: '/products' },
+  { title: 'Dining & terraces', to: '/products' },
+  { title: 'Poolside & spa', to: '/products' },
+  { title: 'Browse everything', to: '/categories' },
+] as const
+
 export function HomePage() {
   const [categories, setCategories] = useState<Category[] | null>(null)
   const [best, setBest] = useState<Product[] | null>(null)
@@ -71,15 +83,23 @@ export function HomePage() {
 
   useEffect(() => {
     let alive = true
-    Promise.all([fetchCategories(), fetchProducts({ page: 1, limit: 8, sort: 'popularity' })])
-      .then(([cats, prod]) => {
+    /** Never tie categories to products: if `/products` fails (auth, sort param, etc.), nav still has categories. */
+    fetchCategories()
+      .then((cats) => {
         if (!alive) return
         setCategories(cats)
-        setBest(prod.items)
       })
       .catch(() => {
         if (!alive) return
         setCategories([])
+      })
+    fetchProducts({ page: 1, limit: 8, sort: 'popularity' })
+      .then((prod) => {
+        if (!alive) return
+        setBest(prod.items)
+      })
+      .catch(() => {
+        if (!alive) return
         setBest([])
       })
     return () => {
@@ -91,8 +111,9 @@ export function HomePage() {
     if (!categories?.length) return []
     const sortCat = (a: Category, b: Category) =>
       (a.sortOrder ?? 0) - (b.sortOrder ?? 0) || a.name.localeCompare(b.name)
-    const roots = categories.filter((c) => !c.parentId).sort(sortCat)
-    return roots.length ? roots : categories.slice().sort(sortCat)
+    const withIds = categories.filter((c) => Boolean(c._id))
+    const roots = withIds.filter((c) => c.parentId == null || c.parentId === '').sort(sortCat)
+    return roots.length ? roots : withIds.slice().sort(sortCat)
   }, [categories])
 
   return (
@@ -107,14 +128,14 @@ export function HomePage() {
 
       <HomeHeroBanner />
 
-      <section className="bg-[rgb(var(--hero))]">
+      <section className="bg-black">
         <div className="container-page py-12 lg:py-16">
           <div className="mx-auto max-w-2xl text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[rgb(var(--brand))]">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-neutral-500">
               Uniik
             </p>
-            <h1 className="heading-display mt-4">Crafting Premium Outdoor Living</h1>
-            <p className="mx-auto mt-6 max-w-lg text-base leading-relaxed text-[rgb(var(--muted))]">
+            <h1 className="heading-display mt-4 !text-neutral-50">Crafting Premium Outdoor Living</h1>
+            <p className="mx-auto mt-6 max-w-lg text-base leading-relaxed text-neutral-400">
               Designed for durability, comfort, and timeless style - premium outdoor furniture crafted to elevate every
               outdoor space.
             </p>
@@ -130,8 +151,36 @@ export function HomePage() {
         </div>
       </section>
 
+      <section className="border-t border-neutral-800 bg-neutral-950">
+        <div className="w-full px-4 py-16 sm:px-6 lg:px-8">
+          <div className="flex flex-col items-center justify-between gap-6 sm:items-center">
+            <div className="max-w-xl text-center">
+              <h2 className="text-3xl font-semibold tracking-tight text-neutral-50 sm:text-4xl">Best sellers</h2>
+              <p className="mt-3 text-base text-neutral-400">
+                Most-loved outdoor furniture pieces chosen for design and durability.
+              </p>
+            </div>
+            <Link
+              to="/products"
+              className="inline-flex shrink-0 items-center justify-center rounded-full bg-[#f5f0e8] px-8 py-3.5 text-sm font-semibold text-neutral-900 shadow-sm transition hover:bg-[#e8e2d6] hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900/35"
+            >
+              Shop all
+            </Link>
+          </div>
+          <div className="mt-10 grid w-full grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
+              {best === null ? (
+                Array.from({ length: 8 }).map((_, i) => <Skeleton key={i} className="h-[420px] rounded-3xl" />)
+              ) : best.length ? (
+                best.map((p) => <ProductCard key={p._id} product={p} />)
+              ) : (
+                <div className="text-sm text-neutral-400">No products yet.</div>
+              )}
+          </div>
+        </div>
+      </section>
+
       {heroAfterImageOk ? (
-        <section className="w-full bg-[rgb(var(--surface))]" aria-label="Featured image">
+        <section className="w-full bg-black" aria-label="Featured image">
           <img
             src={HERO_AFTER_IMAGE_SRC}
             alt="Uniik premium outdoor furniture showcase"
@@ -142,6 +191,8 @@ export function HomePage() {
           />
         </section>
       ) : null}
+
+      <HomeTrustBannerMarquee />
 
       <section className="border-y border-[rgb(var(--border))] bg-black">
         <div className="container-page py-14">
@@ -163,33 +214,43 @@ export function HomePage() {
 
       <section className="container-page py-16">
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl font-semibold tracking-tight text-[rgb(var(--fg))] sm:text-4xl">
+          <h2 className="text-3xl font-semibold tracking-tight text-neutral-50 sm:text-4xl">
             Shop by category
           </h2>
-          <p className="mt-3 text-base text-[rgb(var(--muted))]">
+          <p className="mt-3 text-base text-neutral-400">
             Discover outdoor furniture categories crafted for modern open-air spaces.
           </p>
         </div>
-        <div className="mt-10 grid w-full grid-cols-2 gap-3 sm:gap-4 md:grid-cols-2">
-            {categories === null ? (
-              Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="aspect-[4/5] rounded-3xl" />)
-            ) : displayCategories.length ? (
-              displayCategories.slice(0, 8).map((c) => (
-                <CategoryCard
-                  key={c._id}
-                  category={c}
-                  preferHub
-                  hasChildren={(categories ?? []).some((x) => x.parentId === c._id)}
-                />
-              ))
-            ) : (
-              <div className="text-sm text-[rgb(var(--muted))]">No categories yet.</div>
-            )}
+        <div className="mx-auto mt-10 grid w-full max-w-6xl grid-cols-2 gap-4 sm:gap-5 md:grid-cols-3 xl:grid-cols-4">
+          {categories === null ? (
+            Array.from({ length: 4 }).map((_, i) => (
+              <Skeleton key={i} className="min-h-[22rem] rounded-3xl sm:min-h-[24rem]" />
+            ))
+          ) : displayCategories.length ? (
+            displayCategories.slice(0, 8).map((c) => (
+              <CategoryCard
+                key={c._id}
+                category={c}
+                preferHub
+                hasChildren={(categories ?? []).some((x) => x.parentId === c._id)}
+              />
+            ))
+          ) : (
+            FALLBACK_CATEGORY_TILES.map((tile, i) => (
+              <CategoryCard
+                key={tile.title}
+                category={{ _id: `fallback-home-${i}`, name: tile.title }}
+                linkTo={tile.to}
+                preferHub={false}
+                hasChildren={false}
+              />
+            ))
+          )}
         </div>
         <div className="mt-10 text-center">
           <Link
             to="/categories"
-            className="text-sm font-semibold text-[rgb(var(--brand))] underline-offset-4 hover:underline"
+            className="text-sm font-semibold text-neutral-200 underline-offset-4 hover:underline"
           >
             View all categories
           </Link>
@@ -197,7 +258,7 @@ export function HomePage() {
       </section>
 
       {afterCategoriesImageOk ? (
-        <section className="w-full bg-[rgb(var(--surface))]" aria-label="Featured image after categories">
+        <section className="w-full bg-black" aria-label="Featured image after categories">
           <img
             src={AFTER_CATEGORIES_IMAGE_SRC}
             alt="Uniik outdoor furniture collections"
@@ -209,49 +270,25 @@ export function HomePage() {
         </section>
       ) : null}
 
-      <section className="border-t border-[rgb(var(--border))] bg-[rgb(var(--surface))]">
-        <div className="w-full px-4 py-16 sm:px-6 lg:px-8">
-          <div className="flex flex-col items-center justify-between gap-6 sm:items-center">
-            <div className="max-w-xl text-center">
-              <h2 className="text-3xl font-semibold tracking-tight text-[rgb(var(--fg))] sm:text-4xl">Best sellers</h2>
-              <p className="mt-3 text-base text-[rgb(var(--muted))]">
-                Most-loved outdoor furniture pieces chosen for design and durability.
-              </p>
-            </div>
-            <Link
-              to="/products"
-              className="inline-flex shrink-0 items-center justify-center rounded-full bg-[#f5f0e8] px-8 py-3.5 text-sm font-semibold text-neutral-900 shadow-sm transition hover:bg-[#e8e2d6] hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900/35"
-            >
-              Shop all
-            </Link>
-          </div>
-          <div className="mt-10 grid w-full grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
-              {best === null ? (
-                Array.from({ length: 8 }).map((_, i) => <Skeleton key={i} className="h-[420px] rounded-3xl" />)
-              ) : best.length ? (
-                best.map((p) => <ProductCard key={p._id} product={p} />)
-              ) : (
-                <div className="text-sm text-[rgb(var(--muted))]">No products yet.</div>
-              )}
-          </div>
-        </div>
-      </section>
+      <HomeStoreLocations />
+
+      <HomeFaqSection />
 
       <section className="container-page py-16">
-        <div className="overflow-hidden rounded-3xl border border-white/20 bg-black px-6 py-11 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] sm:px-10 lg:px-14 lg:py-14">
+        <div className="overflow-hidden rounded-3xl border border-neutral-800 bg-neutral-950 px-6 py-11 shadow-sm sm:px-10 lg:px-14 lg:py-14">
           <div className="grid items-center gap-11 lg:grid-cols-2 lg:gap-16">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/70">Our story</p>
-              <p className="mt-4 font-header text-2xl font-semibold leading-snug text-white sm:text-3xl lg:text-[2.125rem] lg:leading-[1.2]">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-neutral-500">Our story</p>
+              <p className="mt-4 font-header text-2xl font-semibold leading-snug text-neutral-50 sm:text-3xl lg:text-[2.125rem] lg:leading-[1.2]">
                 The evenings that matter don&apos;t stay indoors—they drift into lamplight on the terrace, laughter spilling past
                 the last chair you meant to fold away.
               </p>
-              <p className="mt-5 text-sm leading-relaxed text-white/80">
+              <p className="mt-5 text-sm leading-relaxed text-neutral-300">
                 We started Uniik for those unhurried hours: monsoon mist on a railing, a café courtyard filling up again after
                 rain, a villa lawn where guests linger barefoot. Outdoor furniture should honour that softness—and survive every
                 season India asks of it.
               </p>
-              <p className="mt-4 text-sm leading-relaxed text-white/65">
+              <p className="mt-4 text-sm leading-relaxed text-neutral-400">
                 Every weld, weave, and finish is chosen so beauty isn&apos;t fragile: fewer replacements, quieter maintenance,
                 silhouettes that belong in open air for years.
               </p>
@@ -273,6 +310,8 @@ export function HomePage() {
           </div>
         </div>
       </section>
+
+      <HomeWhatsAppFloat />
     </>
   )
 }

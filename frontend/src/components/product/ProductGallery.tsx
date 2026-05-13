@@ -131,11 +131,11 @@ export function ProductGallery({ product }: Props) {
               type="button"
               onClick={() => go(idx)}
               className={[
-                'group relative aspect-square overflow-hidden rounded-2xl border bg-white shadow-sm transition',
+                'group relative aspect-square overflow-hidden rounded-2xl border bg-black/50 shadow-sm transition',
                 'hover:-translate-y-0.5 hover:shadow-md',
                 idx === active
-                  ? 'border-[rgb(var(--brand))] ring-1 ring-[rgb(var(--brand))]'
-                  : 'border-[rgb(var(--border))] hover:border-[rgb(var(--muted))]',
+                  ? 'border-white ring-1 ring-white'
+                  : 'border-white/15 hover:border-white/35',
               ].join(' ')}
               aria-label={`View image ${idx + 1}`}
             >
@@ -158,7 +158,7 @@ export function ProductGallery({ product }: Props) {
           onClick={() => activeSrc && setZoomOpen(true)}
           onTouchStart={onTouchStart}
           onTouchEnd={onTouchEnd}
-          className="group relative w-full aspect-square overflow-hidden rounded-3xl border border-[rgb(var(--border))] bg-white shadow-[0_22px_60px_rgba(0,0,0,0.10)] text-left outline-none ring-[rgb(var(--brand))] focus-visible:ring-2 md:rounded-[30px]"
+          className="group relative w-full aspect-square overflow-hidden rounded-3xl border border-white/12 bg-black/40 shadow-[0_22px_60px_rgba(0,0,0,0.45)] text-left outline-none ring-white focus-visible:ring-2 md:rounded-[30px]"
           aria-label="Open image zoom"
         >
           {safeActiveSrc ? (
@@ -185,7 +185,7 @@ export function ProductGallery({ product }: Props) {
               {badges.map((b) => (
                 <span
                   key={b}
-                  className="rounded-full border border-black/10 bg-white/90 px-3 py-1 text-[11px] font-semibold tracking-[0.02em] text-[rgb(var(--fg))] shadow-sm backdrop-blur"
+                  className="rounded-full border border-white/25 bg-black/55 px-3 py-1 text-[11px] font-semibold tracking-[0.02em] text-white shadow-sm backdrop-blur-sm"
                 >
                   {b}
                 </span>
@@ -207,11 +207,11 @@ export function ProductGallery({ product }: Props) {
                 type="button"
                 onClick={() => go(idx)}
                 className={[
-                  'group relative h-20 w-20 shrink-0 overflow-hidden rounded-2xl border bg-white shadow-sm transition',
+                  'group relative h-20 w-20 shrink-0 overflow-hidden rounded-2xl border bg-black/50 shadow-sm transition',
                   'hover:-translate-y-0.5 hover:shadow-md',
                   idx === active
-                    ? 'border-[rgb(var(--brand))] ring-1 ring-[rgb(var(--brand))]'
-                    : 'border-[rgb(var(--border))] hover:border-[rgb(var(--muted))]',
+                    ? 'border-white ring-1 ring-white'
+                    : 'border-white/15 hover:border-white/35',
                 ].join(' ')}
                 aria-label={`View image ${idx + 1}`}
               >

@@ -39,30 +39,30 @@ function CategoryListRow({
       ? 'Top level'
       : (items.find((x) => x._id === cat.parentId)?.name ?? 'Unknown parent')
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[rgb(var(--border))] p-3">
+    <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/12 bg-black/40 p-3">
       <div className="flex min-w-0 flex-1 items-center gap-3">
         {cat.image ? (
-          <div className="h-14 w-14 shrink-0 overflow-hidden rounded-lg border border-[rgb(var(--border))] bg-[rgb(var(--surface))]">
+          <div className="h-14 w-14 shrink-0 overflow-hidden rounded-lg border border-white/15 bg-neutral-950">
             <img src={cat.image} alt="" className="h-full w-full object-cover" />
           </div>
         ) : (
-          <div className="grid h-14 w-14 shrink-0 place-items-center rounded-lg border border-dashed border-[rgb(var(--border))] text-[10px] text-[rgb(var(--muted))]">
+          <div className="grid h-14 w-14 shrink-0 place-items-center rounded-lg border border-dashed border-white/25 text-[10px] text-white/45">
             No photo
           </div>
         )}
         <div className="min-w-0">
-          <div className="truncate text-sm font-semibold">{cat.name}</div>
-          <div className="truncate text-xs text-[rgb(var(--muted))]">Parent: {parentLabel}</div>
+          <div className="truncate text-sm font-semibold text-white">{cat.name}</div>
+          <div className="truncate text-xs text-white/55">Parent: {parentLabel}</div>
         </div>
       </div>
       <div className="flex flex-wrap items-center gap-2">
-        <div className="flex overflow-hidden rounded-xl border border-[rgb(var(--border))]">
+        <div className="flex overflow-hidden rounded-xl border border-white/15">
           <button
             type="button"
             disabled={!canUp || reorderBusy}
             title="Move up"
             onClick={onMoveUp}
-            className="px-2.5 py-2 text-sm font-semibold text-[rgb(var(--fg))] transition enabled:hover:bg-[rgb(var(--surface))] disabled:opacity-30"
+            className="px-2.5 py-2 text-sm font-semibold text-white transition enabled:hover:bg-white/10 disabled:opacity-30"
           >
             ↑
           </button>
@@ -71,21 +71,17 @@ function CategoryListRow({
             disabled={!canDown || reorderBusy}
             title="Move down"
             onClick={onMoveDown}
-            className="border-l border-[rgb(var(--border))] px-2.5 py-2 text-sm font-semibold text-[rgb(var(--fg))] transition enabled:hover:bg-[rgb(var(--surface))] disabled:opacity-30"
+            className="border-l border-white/15 px-2.5 py-2 text-sm font-semibold text-white transition enabled:hover:bg-white/10 disabled:opacity-30"
           >
             ↓
           </button>
         </div>
-        <button
-          type="button"
-          className="rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-xs font-semibold"
-          onClick={onEdit}
-        >
+        <button type="button" className="admin-btn-outline px-3 py-2" onClick={onEdit}>
           Edit
         </button>
         <button
           type="button"
-          className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs font-semibold text-red-700"
+          className="rounded-xl border border-red-500/40 bg-red-950/40 px-3 py-2 text-xs font-semibold text-red-300 hover:bg-red-950/60"
           onClick={() => void onDelete()}
         >
           Delete
@@ -221,43 +217,43 @@ export function AdminCategoriesPage() {
   return (
     <div>
       <Helmet>
-        <title>Admin Categories — CozyFoam</title>
+        <title>Admin Categories — Uniik</title>
       </Helmet>
 
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <div className="text-lg font-extrabold">Categories</div>
-          <div className="mt-1 text-sm text-[rgb(var(--muted))]">Create and manage storefront categories</div>
+          <div className="text-lg font-extrabold text-white">Categories</div>
+          <div className="mt-1 text-sm text-white/60">Create and manage storefront categories</div>
         </div>
       </div>
 
       <div className="mt-5 grid gap-4 lg:grid-cols-[420px_1fr]">
-        <div className="rounded-3xl border border-[rgb(var(--border))] bg-white p-5 text-neutral-900 shadow-sm">
-          <div className="text-sm font-semibold">{editing ? 'Edit category' : 'New category'}</div>
+        <div className="admin-card">
+          <div className="text-sm font-semibold text-white">{editing ? 'Edit category' : 'New category'}</div>
           <div className="mt-4 space-y-3">
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Category name (e.g. Memory Foam)"
-              className="w-full rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm outline-none focus:border-[rgb(var(--brand))]"
+              placeholder="Category name (e.g. Outdoor seating)"
+              className="admin-field w-full"
             />
             <div className="space-y-2">
-              <div className="text-xs font-semibold text-[rgb(var(--muted))]">Category photo</div>
+              <div className="text-xs font-semibold text-white/55">Category photo</div>
               {image.trim() ? (
                 <div className="flex items-start gap-3">
-                  <div className="h-24 w-24 shrink-0 overflow-hidden rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--surface))]">
+                  <div className="h-24 w-24 shrink-0 overflow-hidden rounded-xl border border-white/15 bg-neutral-950">
                     <img src={image.trim()} alt="" className="h-full w-full object-cover" />
                   </div>
                   <button
                     type="button"
                     onClick={() => setImage('')}
-                    className="rounded-xl border border-red-200 px-3 py-1.5 text-xs font-semibold text-red-700"
+                    className="rounded-xl border border-red-500/40 bg-red-950/40 px-3 py-1.5 text-xs font-semibold text-red-300"
                   >
                     Remove photo
                   </button>
                 </div>
               ) : null}
-              <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--surface))] px-3 py-2 text-xs font-semibold">
+              <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-white/20 bg-black/50 px-3 py-2 text-xs font-semibold text-white hover:bg-white/5">
                 <input
                   type="file"
                   accept="image/*"
@@ -270,14 +266,10 @@ export function AdminCategoriesPage() {
                 value={image}
                 onChange={(e) => setImage(e.target.value)}
                 placeholder="Or paste image URL"
-                className="w-full rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm outline-none focus:border-[rgb(var(--brand))]"
+                className="admin-field w-full"
               />
             </div>
-            <select
-              value={parentId}
-              onChange={(e) => setParentId(e.target.value)}
-              className="w-full rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm outline-none focus:border-[rgb(var(--brand))]"
-            >
+            <select value={parentId} onChange={(e) => setParentId(e.target.value)} className="admin-field w-full">
               <option value="">Top level category</option>
               {(items ?? [])
                 .filter((c) => !editing || c._id !== editing._id)
@@ -287,24 +279,25 @@ export function AdminCategoriesPage() {
                   </option>
                 ))}
             </select>
-            {error ? <div className="text-xs text-red-600">{error}</div> : null}
+            {error ? <div className="text-xs text-red-400">{error}</div> : null}
             <div className="flex gap-2">
               <button
                 disabled={!canSubmit || saving || uploadingImage}
                 onClick={submit}
-                className="flex-1 rounded-xl bg-[rgb(var(--brand))] px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+                className="admin-btn-solid flex-1 disabled:opacity-50"
               >
                 {saving ? 'Saving…' : editing ? 'Update' : 'Create'}
               </button>
               {editing ? (
                 <button
+                  type="button"
                   onClick={() => {
                     setEditing(null)
                     setName('')
                     setImage('')
                     setParentId('')
                   }}
-                  className="rounded-xl border border-[rgb(var(--border))] px-4 py-2 text-sm font-semibold"
+                  className="admin-btn-outline flex-1 py-2 text-sm"
                 >
                   Cancel
                 </button>
@@ -313,21 +306,21 @@ export function AdminCategoriesPage() {
           </div>
         </div>
 
-        <div className="rounded-3xl border border-[rgb(var(--border))] bg-white p-5 text-neutral-900 shadow-sm">
-          <div className="text-sm font-semibold">All categories</div>
-          <p className="mt-1 text-xs text-[rgb(var(--muted))]">
+        <div className="admin-card">
+          <div className="text-sm font-semibold text-white">All categories</div>
+          <p className="mt-1 text-xs text-white/55">
             Use ↑ ↓ to set order. Top-level order is separate from each parent’s child order. The storefront uses the
             same order.
           </p>
           <div className="mt-4 space-y-6">
             {items === null ? (
-              <div className="text-sm text-[rgb(var(--muted))]">Loading…</div>
+              <div className="text-sm text-white/55">Loading…</div>
             ) : !grouped?.roots.length ? (
-              <div className="text-sm text-[rgb(var(--muted))]">No categories yet.</div>
+              <div className="text-sm text-white/55">No categories yet.</div>
             ) : (
               <>
                 <div>
-                  <div className="text-xs font-semibold uppercase tracking-wide text-[rgb(var(--muted))]">
+                  <div className="text-xs font-semibold uppercase tracking-wide text-white/45">
                     Top level
                   </div>
                   <div className="mt-2 grid gap-2">
@@ -361,7 +354,7 @@ export function AdminCategoriesPage() {
                   if (!kids.length) return null
                   return (
                     <div key={parent._id}>
-                      <div className="text-xs font-semibold uppercase tracking-wide text-[rgb(var(--muted))]">
+                      <div className="text-xs font-semibold uppercase tracking-wide text-white/45">
                         Under “{parent.name}”
                       </div>
                       <div className="mt-2 grid gap-2">

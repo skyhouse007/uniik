@@ -31,7 +31,6 @@ const MAX_ANNOUNCEMENT_LEN = 220
 export function AdminContentPage() {
   const [settings, setSettings] = useState<Settings | null>(null)
   const [headerForm, setHeaderForm] = useState({
-    /** One string per announcement (shown one-by-one in the storefront bar). */
     announcementLines: [''] as string[],
     contactEmail: '',
   })
@@ -67,7 +66,6 @@ export function AdminContentPage() {
     try {
       const announcements = headerForm.announcementLines.map((l) => l.trim()).filter(Boolean)
       const email = headerForm.contactEmail.trim()
-      /** Omit empty email so Zod never rejects the whole PUT; server keeps existing contact email. */
       const updated = await adminPut<Settings>('/admin/content/settings', {
         announcements,
         ...(email ? { contactEmail: email } : {}),
@@ -91,30 +89,28 @@ export function AdminContentPage() {
   return (
     <div>
       <Helmet>
-        <title>Admin Content - CozyFoam</title>
+        <title>Admin Content — Uniik</title>
       </Helmet>
 
       <div>
-        <div className="text-lg font-extrabold">Content</div>
-        <div className="mt-1 text-sm text-[rgb(var(--muted))]">
-          Announcements (one field each in admin), contact email, bulk order messages
-        </div>
+        <div className="text-lg font-extrabold text-white">Content</div>
+        <div className="mt-1 text-sm text-white/60">Announcements, contact email, bulk order messages</div>
       </div>
 
       <div className="mt-5 grid gap-4 lg:grid-cols-[420px_1fr]">
-        <div className="rounded-3xl border border-[rgb(var(--border))] bg-white p-5 text-neutral-900 shadow-sm">
-          <div className="text-sm font-semibold">Header settings</div>
+        <div className="admin-card">
+          <div className="text-sm font-semibold text-white">Header settings</div>
           <div className="mt-4 space-y-3">
             <div className="space-y-2">
-              <div className="text-xs font-medium text-neutral-900">Announcements</div>
-              <p className="text-xs text-[rgb(var(--muted))]">
+              <div className="text-xs font-medium text-white/80">Announcements</div>
+              <p className="text-xs text-white/55">
                 Each box is one message. The storefront rotates them automatically every few seconds. Empty boxes are ignored on save.
               </p>
               <ul className="mt-2 list-none space-y-2 p-0">
                 {headerForm.announcementLines.map((line, index) => (
                   <li key={index} className="flex gap-2">
                     <span
-                      className="mt-2.5 w-7 shrink-0 text-right text-[11px] font-medium tabular-nums text-[rgb(var(--muted))]"
+                      className="mt-2.5 w-7 shrink-0 text-right text-[11px] font-medium tabular-nums text-white/45"
                       aria-hidden
                     >
                       {index + 1}
@@ -140,9 +136,9 @@ export function AdminContentPage() {
                             ? 'e.g. Free shipping on prepaid orders above ₹999'
                             : 'Next message…'
                         }
-                        className="w-full rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm text-neutral-900"
+                        className="admin-field w-full"
                       />
-                      <div className="mt-0.5 text-right text-[10px] text-[rgb(var(--muted))]">
+                      <div className="mt-0.5 text-right text-[10px] text-white/45">
                         {line.length}/{MAX_ANNOUNCEMENT_LEN}
                       </div>
                     </div>
@@ -155,7 +151,7 @@ export function AdminContentPage() {
                           return { ...f, announcementLines: next.length ? next : [''] }
                         })
                       }
-                      className="mt-1 shrink-0 rounded-lg px-2 py-1 text-xs font-medium text-red-600 transition hover:bg-red-50 disabled:pointer-events-none disabled:opacity-30"
+                      className="mt-1 shrink-0 rounded-lg px-2 py-1 text-xs font-medium text-red-400 transition hover:bg-red-950/50 disabled:pointer-events-none disabled:opacity-30"
                       title="Remove this announcement"
                     >
                       Remove
@@ -173,7 +169,7 @@ export function AdminContentPage() {
                       : { ...f, announcementLines: [...f.announcementLines, ''] },
                   )
                 }
-                className="w-full rounded-xl border border-dashed border-[rgb(var(--border))] py-2 text-xs font-semibold text-[rgb(var(--muted))] transition hover:border-[rgb(var(--muted))] hover:text-neutral-900 disabled:opacity-40"
+                className="w-full rounded-xl border border-dashed border-white/25 py-2 text-xs font-semibold text-white/65 transition hover:border-white/40 hover:text-white disabled:opacity-40"
               >
                 + Add another announcement ({headerForm.announcementLines.length}/{MAX_ANNOUNCEMENTS})
               </button>
@@ -182,34 +178,30 @@ export function AdminContentPage() {
               value={headerForm.contactEmail}
               onChange={(e) => setHeaderForm((f) => ({ ...f, contactEmail: e.target.value }))}
               placeholder="Contact email"
-              className="w-full rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm text-neutral-900"
+              className="admin-field w-full"
             />
-            {error ? <div className="text-xs text-red-600">{error}</div> : null}
-            <button
-              disabled={saving}
-              onClick={saveSettings}
-              className="w-full rounded-xl bg-[rgb(var(--brand))] px-4 py-2 text-sm font-semibold text-black disabled:opacity-50"
-            >
+            {error ? <div className="text-xs text-red-400">{error}</div> : null}
+            <button disabled={saving} onClick={saveSettings} className="admin-btn-solid w-full disabled:opacity-50">
               {saving ? 'Saving...' : 'Save'}
             </button>
           </div>
           {settings ? (
-            <div className="mt-3 text-xs text-[rgb(var(--muted))]">Current contact: {settings.contactEmail}</div>
+            <div className="mt-3 text-xs text-white/55">Current contact: {settings.contactEmail}</div>
           ) : null}
         </div>
 
-        <div className="rounded-3xl border border-[rgb(var(--border))] bg-white p-5 text-neutral-900 shadow-sm">
-          <div className="text-sm font-semibold">Bulk order messages</div>
+        <div className="admin-card">
+          <div className="text-sm font-semibold text-white">Bulk order messages</div>
           <div className="mt-4 grid gap-2">
             {inquiries === null ? (
-              <div className="text-sm text-[rgb(var(--muted))]">Loading...</div>
+              <div className="text-sm text-white/55">Loading...</div>
             ) : inquiries.length ? (
               inquiries.map((i) => (
-                <div key={i._id} className="rounded-2xl border border-[rgb(var(--border))] p-3">
+                <div key={i._id} className="rounded-2xl border border-white/12 bg-black/40 p-3">
                   <div className="flex flex-wrap items-start justify-between gap-2">
                     <div>
-                      <div className="text-sm font-semibold">{i.name}</div>
-                      <div className="text-xs text-[rgb(var(--muted))]">
+                      <div className="text-sm font-semibold text-white">{i.name}</div>
+                      <div className="text-xs text-white/55">
                         {i.phone} {i.email ? `• ${i.email}` : ''}
                       </div>
                     </div>
@@ -219,19 +211,19 @@ export function AdminContentPage() {
                         await adminPut(`/admin/content/bulk-inquiries/${i._id}`, { status: e.target.value })
                         await load()
                       }}
-                      className="rounded-xl border border-[rgb(var(--border))] bg-white px-3 py-2 text-xs text-neutral-900"
+                      className="rounded-xl border border-white/20 bg-neutral-950 px-3 py-2 text-xs text-white outline-none focus:border-white/45"
                     >
                       <option value="new">new</option>
                       <option value="contacted">contacted</option>
                       <option value="closed">closed</option>
                     </select>
                   </div>
-                  <div className="mt-2 text-sm text-neutral-800">{i.message}</div>
-                  <div className="mt-1 text-xs text-[rgb(var(--muted))]">{new Date(i.createdAt).toLocaleString()}</div>
+                  <div className="mt-2 text-sm text-white/75">{i.message}</div>
+                  <div className="mt-1 text-xs text-white/45">{new Date(i.createdAt).toLocaleString()}</div>
                 </div>
               ))
             ) : (
-              <div className="text-sm text-[rgb(var(--muted))]">No bulk order messages yet.</div>
+              <div className="text-sm text-white/55">No bulk order messages yet.</div>
             )}
           </div>
         </div>

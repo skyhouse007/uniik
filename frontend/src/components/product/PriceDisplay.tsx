@@ -43,7 +43,7 @@ export function PriceDisplay({
         {hasDiscount ? (
           <>
             <div className="text-sm font-medium text-[rgb(var(--muted))] line-through">{formatMoney(basePrice)}</div>
-            <div className="rounded-full border border-emerald-200/80 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-800">
+            <div className="rounded-full border border-emerald-500/35 bg-emerald-950/45 px-3 py-1 text-xs font-semibold text-emerald-100">
               {discountPercentage}% OFF
             </div>
           </>

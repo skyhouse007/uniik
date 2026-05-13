@@ -1,6 +1,10 @@
 import dotenv from 'dotenv'
+import path from 'path'
+import { fileURLToPath } from 'url'
 
-dotenv.config()
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+/** Load `backend/.env` even when process cwd is repo root or another folder. */
+dotenv.config({ path: path.join(__dirname, '..', '..', '.env') })
 
 function must(name) {
   const v = process.env[name]
@@ -22,9 +26,9 @@ export const env = {
   CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME ?? '',
   CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY ?? '',
   CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET ?? '',
-  ADMIN_EMAIL: process.env.ADMIN_EMAIL ?? '',
-  ADMIN_PASSWORD: process.env.ADMIN_PASSWORD ?? '',
-  ADMIN_JWT_SECRET: process.env.ADMIN_JWT_SECRET ?? '',
+  ADMIN_EMAIL: (process.env.ADMIN_EMAIL ?? '').trim().toLowerCase(),
+  ADMIN_PASSWORD: (process.env.ADMIN_PASSWORD ?? '').trim(),
+  ADMIN_JWT_SECRET: (process.env.ADMIN_JWT_SECRET ?? '').trim(),
 
   /** Identifying User-Agent for OpenStreetMap Nominatim (pincode geocoding). */
   NOMINATIM_USER_AGENT: process.env.NOMINATIM_USER_AGENT ?? '',

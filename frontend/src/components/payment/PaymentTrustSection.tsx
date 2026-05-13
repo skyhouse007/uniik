@@ -32,7 +32,9 @@ export function PaymentTrustSection({ price, variant = 'product' }: Props) {
   const cardPadding = variant === 'summary' ? 'p-4' : 'p-5'
 
   return (
-    <section className={`font-ui rounded-xl border border-[rgb(var(--border))] bg-white ${cardPadding} shadow-sm`}>
+    <section
+      className={`font-ui rounded-xl border border-white/12 bg-black/45 ${cardPadding} shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] backdrop-blur-sm`}
+    >
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
           <div className="font-header text-base font-semibold tracking-tight text-[rgb(var(--fg))]">Payment Options</div>
@@ -50,13 +52,13 @@ export function PaymentTrustSection({ price, variant = 'product' }: Props) {
           )}
         </div>
 
-        <div className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-[rgb(var(--surface))] px-3 py-1 text-[11px] font-semibold text-[rgb(var(--fg))]">
+        <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-semibold text-[rgb(var(--fg))]">
           <IconShield />
           Secure
         </div>
       </div>
 
-      <div className="mt-4 rounded-xl border border-black/10 bg-[rgb(var(--surface))] px-4 py-3">
+      <div className="mt-4 rounded-xl border border-white/10 bg-black/35 px-4 py-3">
         <div className="text-xs font-semibold text-[rgb(var(--fg))]">Secure payments powered by Razorpay</div>
         <div className="mt-1 text-xs text-[rgb(var(--muted))]">Your card and UPI details are processed securely in Razorpay checkout.</div>
       </div>
@@ -70,7 +72,7 @@ export function PaymentTrustSection({ price, variant = 'product' }: Props) {
 
       <button
         type="button"
-        className="mt-5 w-full rounded-xl border border-[rgb(var(--border))] bg-white px-4 py-3 text-sm font-semibold text-[rgb(var(--fg))] shadow-sm transition hover:border-[rgb(var(--muted))] hover:shadow"
+        className="mt-5 w-full rounded-xl border border-white/20 bg-transparent px-4 py-3 text-sm font-semibold text-[rgb(var(--fg))] transition hover:border-white/35 hover:bg-white/5"
         onClick={() => setExpanded((v) => !v)}
         aria-expanded={expanded}
       >
@@ -80,7 +82,7 @@ export function PaymentTrustSection({ price, variant = 'product' }: Props) {
       {expanded ? (
         <div className="mt-4 grid gap-2">
           {['Credit Card', 'Debit Card', 'UPI', 'Net Banking', 'EMI options'].map((m) => (
-            <div key={m} className="rounded-xl border border-[rgb(var(--border))] bg-white px-4 py-3 text-sm text-[rgb(var(--fg))]">
+            <div key={m} className="rounded-xl border border-white/12 bg-black/35 px-4 py-3 text-sm text-[rgb(var(--fg))]">
               <div className="font-semibold">{m}</div>
               <div className="mt-1 text-xs text-[rgb(var(--muted))]">Available inside Razorpay checkout based on eligibility.</div>
             </div>

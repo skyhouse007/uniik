@@ -83,7 +83,9 @@ export function CategoryPage() {
 
       <div className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-2">
         {displayCategories === null ? (
-          Array.from({ length: 8 }).map((_, i) => <Skeleton key={i} className="h-20 rounded-2xl" />)
+          Array.from({ length: 8 }).map((_, i) => (
+            <Skeleton key={i} className="min-h-[22rem] rounded-3xl sm:min-h-[24rem]" />
+          ))
         ) : parentId && !parent ? (
           <div className="col-span-full text-sm text-[rgb(var(--muted))]">
             This category was not found.{' '}

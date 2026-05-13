@@ -51,7 +51,7 @@ function OrderStepper({ status }: { status: Order['orderStatus'] }) {
   return (
     <div className="mt-6">
       <div className="relative mx-auto max-w-3xl">
-        <div className="absolute left-4 right-4 top-4 h-[2px] bg-[rgb(var(--border))]" />
+        <div className="absolute left-4 right-4 top-4 h-[2px] bg-white/15" />
         <div
           className={['absolute left-4 top-4 h-[2px]', progressColor].join(' ')}
           style={{
@@ -72,15 +72,17 @@ function OrderStepper({ status }: { status: Order['orderStatus'] }) {
                 ? 'bg-emerald-600 ring-emerald-600'
                 : 'bg-[rgb(var(--brand))] ring-[rgb(var(--brand))]'
 
+            const inactiveDot = 'bg-neutral-800 ring-white/20'
+
             const dotClass = isCancelled
               ? isActive
                 ? activeColor
-                : 'bg-white ring-[rgb(var(--border))]'
+                : inactiveDot
               : isActive
                 ? activeColor
                 : isDone
                   ? doneColor
-                  : 'bg-white ring-[rgb(var(--border))]'
+                  : inactiveDot
 
             return (
               <div key={s.id} className="flex flex-col items-center text-center">
@@ -158,10 +160,10 @@ export function TrackOrderPage() {
   return (
     <div className="container-page py-8">
       <Helmet>
-        <title>Track Your Order - CozyFoam</title>
+        <title>Track Your Order — Uniik</title>
       </Helmet>
-      <div className="text-xl font-extrabold tracking-tight">Track My Order</div>
-      <div className="mt-1 text-sm text-[rgb(var(--muted))]">Latest status updates from CozyFoam.</div>
+      <div className="font-header text-xl font-extrabold tracking-tight text-[rgb(var(--fg))]">Track My Order</div>
+      <div className="mt-1 text-sm text-[rgb(var(--muted))]">Latest status updates from Uniik.</div>
 
       {items === null ? (
         <div className="mt-6 grid max-w-3xl gap-3">
@@ -171,10 +173,10 @@ export function TrackOrderPage() {
         </div>
       ) : items.length ? (
         <div className="mt-6 max-w-4xl">
-          <div className="rounded-3xl border border-[rgb(var(--border))] bg-white p-6 shadow-sm">
+          <div className="rounded-3xl border border-white/12 bg-black/45 p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-sm">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="min-w-0">
-                <div className="text-lg font-extrabold tracking-tight">Track My Order</div>
+                <div className="text-lg font-extrabold tracking-tight text-[rgb(var(--fg))]">Track My Order</div>
                 {activeOrder ? (
                   <div className="mt-2 text-sm text-[rgb(var(--muted))]">
                     Order ID: <span className="font-semibold text-[rgb(var(--fg))]">#{activeOrder._id.slice(-8)}</span>
@@ -185,7 +187,7 @@ export function TrackOrderPage() {
                 <select
                   value={activeOrder?._id ?? ''}
                   onChange={(e) => setActiveId(e.target.value)}
-                  className="rounded-xl border border-[rgb(var(--border))] bg-white px-3 py-2 text-sm font-semibold text-[rgb(var(--fg))] outline-none focus:border-[rgb(var(--brand))]"
+                  className="rounded-xl border border-white/20 bg-black px-3 py-2 text-sm font-semibold text-white outline-none focus:border-white/45"
                 >
                   {items.map((o) => (
                     <option key={o._id} value={o._id}>
@@ -198,7 +200,7 @@ export function TrackOrderPage() {
 
             {activeOrder ? (
               <>
-                <div className="mt-4 rounded-2xl border border-[rgb(var(--border))] bg-white p-4 shadow-sm">
+                <div className="mt-4 rounded-2xl border border-white/12 bg-black/55 p-4">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div className="text-sm font-semibold text-[rgb(var(--fg))]">Order ID: #{activeOrder._id.slice(-8)}</div>
                     <div className="text-xs font-semibold text-[rgb(var(--muted))]">
@@ -238,24 +240,24 @@ export function TrackOrderPage() {
           </div>
         </div>
       ) : (
-        <div className="mt-6 max-w-2xl rounded-3xl border border-[rgb(var(--border))] bg-white p-5 shadow-sm">
+        <div className="mt-6 max-w-2xl rounded-3xl border border-white/12 bg-black/45 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-sm">
           <div className="grid gap-3">
             <input
               value={orderId}
               onChange={(e) => setOrderId(e.target.value)}
               placeholder="Order ID"
-              className="rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm"
+              className="rounded-xl border border-white/20 bg-black px-3 py-2 text-sm text-white outline-none placeholder:text-white/35 focus:border-white/45"
             />
             <input
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="Phone number"
-              className="rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm"
+              className="rounded-xl border border-white/20 bg-black px-3 py-2 text-sm text-white outline-none placeholder:text-white/35 focus:border-white/45"
             />
             <button
               onClick={submit}
               disabled={busy || orderId.trim().length < 4 || phone.trim().length < 3}
-              className="rounded-xl bg-[rgb(var(--brand))] px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+              className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-neutral-900 transition hover:bg-neutral-200 disabled:opacity-50"
             >
               {busy ? 'Tracking...' : 'Track order'}
             </button>
@@ -263,19 +265,19 @@ export function TrackOrderPage() {
         </div>
       )}
 
-      {error ? <div className="mt-4 text-sm text-red-600">{error}</div> : null}
+      {error ? <div className="mt-4 text-sm text-red-400">{error}</div> : null}
 
       {result ? (
-        <div className="mt-6 max-w-2xl rounded-3xl border border-[rgb(var(--border))] bg-white p-5 shadow-sm">
-          <div className="text-sm font-semibold">Order #{result._id.slice(-8)}</div>
+        <div className="mt-6 max-w-2xl rounded-3xl border border-white/12 bg-black/45 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-sm">
+          <div className="text-sm font-semibold text-[rgb(var(--fg))]">Order #{result._id.slice(-8)}</div>
           <div className="mt-1 text-xs text-[rgb(var(--muted))]">{new Date(result.createdAt).toLocaleString()}</div>
-          <div className="mt-3 text-sm">
+          <div className="mt-3 text-sm text-[rgb(var(--fg))]">
             <span className="font-semibold">Status:</span> {String(result.orderStatus).toUpperCase()}
           </div>
-          <div className="mt-1 text-sm">
+          <div className="mt-1 text-sm text-[rgb(var(--fg))]">
             <span className="font-semibold">Payment:</span> {String(result.paymentStatus).toUpperCase()}
           </div>
-          <div className="mt-1 text-sm">
+          <div className="mt-1 text-sm text-[rgb(var(--fg))]">
             <span className="font-semibold">Total:</span> {formatMoney(result.totalAmount)}
           </div>
         </div>

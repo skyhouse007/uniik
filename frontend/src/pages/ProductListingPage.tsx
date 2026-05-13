@@ -51,42 +51,41 @@ export function ProductListingPage() {
     const p = new URLSearchParams(params)
     if (!v) p.delete(k)
     else p.set(k, v)
-    p.set('page', '1')
+    if (k !== 'page') p.set('page', '1')
     navigate({ pathname: '/products', search: p.toString() })
   }
 
   const totalPages = data ? Math.max(1, Math.ceil(data.total / data.limit)) : 1
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      <div className="container-page py-8">
-        <Helmet>
-          <title>Mattresses — CozyFoam</title>
-          <meta name="description" content="Browse mattresses with filters, sorting, and premium brand highlights." />
-        </Helmet>
+    <div className="container-page py-8">
+      <Helmet>
+        <title>Products — Uniik</title>
+        <meta name="description" content="Browse outdoor furniture with filters, sorting, and pagination." />
+      </Helmet>
 
-        <div className="flex flex-wrap items-end justify-between gap-3">
-          <div>
-            <div className="text-xl font-extrabold tracking-tight">Mattresses</div>
-            <div className="mt-1 text-sm text-[rgb(var(--muted))]">Filters • Sorting • Pagination</div>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="text-xs font-semibold text-[rgb(var(--muted))]">Sort</div>
-            <select
-              value={query.sort}
-              onChange={(e) => setParam('sort', e.target.value)}
-              className="rounded-xl border border-[rgb(var(--border))] bg-white px-3 py-2 text-sm outline-none focus:border-[rgb(var(--brand))]"
-            >
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <div className="font-header text-xl font-extrabold tracking-tight text-[rgb(var(--fg))]">Products</div>
+          <div className="mt-1 text-sm text-[rgb(var(--muted))]">Filters • Sort • Pages</div>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="text-xs font-semibold text-[rgb(var(--muted))]">Sort</div>
+          <select
+            value={query.sort}
+            onChange={(e) => setParam('sort', e.target.value)}
+            className="rounded-xl border border-white/20 bg-black px-3 py-2 text-sm text-white outline-none focus:border-white/45"
+          >
               <option value="popularity">Popularity</option>
               <option value="price_asc">Price: low → high</option>
               <option value="price_desc">Price: high → low</option>
               <option value="rating_desc">Rating</option>
               <option value="newest">Newest</option>
             </select>
-          </div>
         </div>
+      </div>
 
-        <div className="mt-6 grid gap-6 lg:grid-cols-[280px_1fr]">
+      <div className="mt-6 grid gap-6 lg:grid-cols-[280px_1fr]">
           <FilterSidebar />
 
           <div>
@@ -105,7 +104,7 @@ export function ProductListingPage() {
                   </div>
                 ))
               ) : (
-                <div className="rounded-2xl border border-[rgb(var(--border))] bg-white p-6 text-sm text-[rgb(var(--muted))]">
+                <div className="rounded-2xl border border-white/12 bg-black/45 p-6 text-sm text-[rgb(var(--muted))] backdrop-blur-sm">
                   No products found for the selected filters.
                 </div>
               )}
@@ -120,14 +119,14 @@ export function ProductListingPage() {
                   <button
                     disabled={data.page <= 1}
                     onClick={() => setParam('page', String(Math.max(1, data.page - 1)))}
-                    className="rounded-xl border border-[rgb(var(--border))] bg-white px-3 py-2 text-sm font-semibold disabled:opacity-50"
+                    className="rounded-xl border border-white/20 bg-black px-3 py-2 text-sm font-semibold text-white disabled:opacity-50 hover:border-white/35"
                   >
                     Prev
                   </button>
                   <button
                     disabled={data.page >= totalPages}
                     onClick={() => setParam('page', String(Math.min(totalPages, data.page + 1)))}
-                    className="rounded-xl border border-[rgb(var(--border))] bg-white px-3 py-2 text-sm font-semibold disabled:opacity-50"
+                    className="rounded-xl border border-white/20 bg-black px-3 py-2 text-sm font-semibold text-white disabled:opacity-50 hover:border-white/35"
                   >
                     Next
                   </button>
@@ -135,7 +134,6 @@ export function ProductListingPage() {
               </div>
             ) : null}
           </div>
-        </div>
       </div>
     </div>
   )

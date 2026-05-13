@@ -6,9 +6,10 @@ import { fetchSiteSettings, type SiteSettings } from '../api/site'
 import { fetchCategories } from '../api/catalog'
 import type { Category } from '../types/catalog'
 import uniikLogo from '../assets/uniik.png'
+import { PremiumAnnouncementBar } from './PremiumAnnouncementBar'
 
-const ANNOUNCEMENT_CALL_DISPLAY = '9740144811'
-const ANNOUNCEMENT_CALL_TEL = '+919740144811'
+const ANNOUNCEMENT_CALL_DISPLAY = '1234567890'
+const ANNOUNCEMENT_CALL_TEL = '+911234567890'
 
 type CategoryNode = {
   id: string
@@ -333,15 +334,16 @@ export function Navbar() {
   const location = useLocation()
   const DEFAULT_ANNOUNCEMENTS = useMemo(
     () => [
-      'Natural latex & breathable foams — sleep closer to nature',
-      'Free shipping on all orders',
-      '100-night trial on select mattresses',
+      '100% Natural Latex',
+      'Pure Sleep Comfort',
+      'Free Delivery Across India',
+      'Breathable Organic Materials',
+      '10-Year Warranty',
+      'Pure Latex. Pure Sleep. Pure Nature.',
     ],
     [],
   )
   const [announcements, setAnnouncements] = useState<string[]>(DEFAULT_ANNOUNCEMENTS)
-  const [announcementIndex, setAnnouncementIndex] = useState(0)
-  const [announcementRotationPaused, setAnnouncementRotationPaused] = useState(false)
   const [contactEmail, setContactEmail] = useState('support@cozyfoam.in')
   const [categoryTree, setCategoryTree] = useState<CategoryNode[]>([])
   const [openMegaId, setOpenMegaId] = useState<string | null>(null)
@@ -381,7 +383,6 @@ export function Navbar() {
       const lines = fromList.length ? fromList : fromLegacy
       const next = lines.length ? lines : DEFAULT_ANNOUNCEMENTS
       setAnnouncements(next)
-      setAnnouncementIndex(0)
       setContactEmail(s.contactEmail || 'support@cozyfoam.in')
     }
     function loadSiteSettings() {
@@ -400,18 +401,6 @@ export function Navbar() {
       document.removeEventListener('visibilitychange', onVisible)
     }
   }, [DEFAULT_ANNOUNCEMENTS])
-
-  useEffect(() => {
-    if (announcements.length <= 1 || announcementRotationPaused) return
-    const id = window.setInterval(() => {
-      setAnnouncementIndex((i) => (i + 1) % announcements.length)
-    }, 5500)
-    return () => clearInterval(id)
-  }, [announcements, announcementRotationPaused])
-
-  const activeAnnouncementIndex =
-    announcements.length > 0 ? announcementIndex % announcements.length : 0
-  const activeAnnouncementText = announcements[activeAnnouncementIndex] ?? ''
 
   useEffect(() => {
     return () => {
@@ -434,7 +423,7 @@ export function Navbar() {
     const ro = new ResizeObserver(sync)
     ro.observe(el)
     return () => ro.disconnect()
-  }, [categoryTree.length, announcements.length])
+  }, [categoryTree.length])
 
   const updateMegaTop = useCallback(() => {
     const el = megaAnchorRef.current
@@ -552,43 +541,24 @@ export function Navbar() {
 
   const categoryTriggerClass = (open: boolean) =>
     [
-      'inline-flex items-center whitespace-nowrap border-b-2 border-transparent pb-0.5 text-[10px] font-medium uppercase leading-none tracking-[0.08em] text-[rgb(var(--fg))] transition lg:text-[11px]',
-      'hover:border-current/25 hover:text-[rgb(var(--muted))]',
-      open ? 'border-[rgb(var(--fg))]' : '',
+      'inline-flex items-center whitespace-nowrap border-b-2 border-transparent pb-0.5 text-[10px] font-medium uppercase leading-none tracking-[0.08em] text-white/90 transition lg:text-[11px]',
+      'hover:border-white/35 hover:text-white',
+      open ? 'border-white' : '',
     ].join(' ')
 
   return (
     <>
       <header
         ref={headerRef}
-        className="font-header relative z-40 overflow-visible border-b border-[rgb(var(--border))] bg-page-gradient shadow-[0_1px_0_rgba(255,255,255,0.06)]"
+        className="font-header relative z-40 overflow-visible border-b border-white/10 bg-black"
       >
-      <div
-        className="font-ui relative flex min-h-[2rem] items-center justify-center overflow-hidden bg-[rgb(var(--hero))] px-3 py-0.5 text-center text-[11px] font-medium tracking-[0.02em] text-[rgb(var(--fg))] sm:min-h-[2.125rem] sm:text-[12px]"
-        onMouseEnter={() => setAnnouncementRotationPaused(true)}
-        onMouseLeave={() => setAnnouncementRotationPaused(false)}
-      >
-        <div className="relative z-10 w-full px-2 py-1 sm:px-3">
-          <div
-            className="mx-auto flex min-h-0 max-w-[min(44rem,calc(100%-10.5rem))] items-center justify-center py-0.5 text-center font-medium tracking-wide sm:max-w-[min(56rem,calc(100%-12.5rem))]"
-            aria-live="polite"
-            aria-atomic="true"
-          >
-            <span
-              key={announcementIndex}
-              className="announcement-bar-item inline-block max-w-full leading-snug"
-            >
-              {activeAnnouncementText}
-            </span>
-          </div>
-        </div>
-      </div>
+      <PremiumAnnouncementBar announcements={announcements} />
 
       <div>
         <div className="container-page relative flex h-[160px] flex-nowrap items-center gap-2 sm:gap-4 md:grid md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] md:items-center lg:gap-5">
           <button
             type="button"
-            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[rgb(var(--fg))] md:hidden"
+            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-white md:hidden hover:bg-white/10 hover:text-white"
             aria-label="Open menu"
             onClick={() => setMobileNavOpen(true)}
           >
@@ -600,7 +570,7 @@ export function Navbar() {
               <label htmlFor="nav-search" className="sr-only">
                 Search products
               </label>
-              <div className="flex h-11 items-center rounded-none border border-[rgb(var(--border))] bg-[rgb(var(--surface))] px-4">
+              <div className="flex h-11 items-center rounded-none border border-neutral-700 bg-neutral-950 px-4">
                 <svg
                   viewBox="0 0 24 24"
                   width={18}
@@ -611,7 +581,7 @@ export function Navbar() {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   aria-hidden
-                  className="shrink-0 text-[rgb(var(--muted))]"
+                  className="shrink-0 text-neutral-500"
                 >
                   <circle cx="11" cy="11" r="7" />
                   <path d="m20 20-3.5-3.5" />
@@ -621,7 +591,7 @@ export function Navbar() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search products..."
-                  className="w-full bg-transparent px-3 text-sm text-[rgb(var(--fg))] outline-none placeholder:text-[rgb(var(--muted))]"
+                  className="w-full bg-transparent px-3 text-sm text-white outline-none placeholder:text-neutral-500"
                 />
               </div>
             </form>
@@ -641,7 +611,7 @@ export function Navbar() {
             <div className="flex items-center gap-0 sm:gap-0.5">
               <Link
                 to="/wishlist"
-                className="relative inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[rgb(var(--fg))] transition hover:bg-[rgb(var(--surface))] hover:text-[rgb(var(--muted))]"
+                className="relative inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-white transition hover:bg-white/10 hover:text-white"
                 aria-label={`Wishlist, ${wishlistCount} items`}
               >
                 <IconHeart />
@@ -664,8 +634,8 @@ export function Navbar() {
                   aria-haspopup="true"
                   aria-label={`Call ${ANNOUNCEMENT_CALL_DISPLAY}`}
                   className={[
-                    'inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[rgb(var(--fg))] transition hover:bg-[rgb(var(--surface))] hover:text-[rgb(var(--muted))]',
-                    phoneMenuOpen ? 'bg-[rgb(var(--surface))]' : '',
+                    'inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-white transition hover:bg-white/10 hover:text-white',
+                    phoneMenuOpen ? 'bg-white/10' : '',
                   ].join(' ')}
                   onClick={() => {
                     if (!useHoverMega) {
@@ -684,13 +654,13 @@ export function Navbar() {
                   onMouseEnter={useHoverMega ? openPhoneMenu : undefined}
                   onMouseLeave={useHoverMega ? scheduleClosePhoneMenu : undefined}
                 >
-                  <div className="rounded-2xl border border-[rgb(var(--border))] bg-[rgb(var(--inverse))] p-3 shadow-xl ring-1 ring-black/5">
+                  <div className="rounded-2xl border border-white/12 bg-neutral-950/95 p-3 shadow-2xl ring-1 ring-white/10 backdrop-blur-md">
                     <div className="text-xs font-semibold uppercase tracking-wider text-[rgb(var(--muted))]">
                       Call now
                     </div>
                     <a
                       href={`tel:${ANNOUNCEMENT_CALL_TEL}`}
-                      className="mt-2 inline-flex items-center gap-2 rounded-xl bg-[rgb(var(--surface))] px-3 py-2 text-sm font-semibold text-[rgb(var(--brand))] transition hover:opacity-80"
+                      className="mt-2 inline-flex items-center gap-2 rounded-xl bg-white/10 px-3 py-2 text-sm font-semibold text-white transition hover:bg-white/15"
                     >
                       <IconPhone className="h-4 w-4" />
                       <span className="tabular-nums tracking-wide">{ANNOUNCEMENT_CALL_DISPLAY}</span>
@@ -704,7 +674,7 @@ export function Navbar() {
                   <button
                     type="button"
                     aria-label="Sign in"
-                    className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[rgb(var(--fg))] transition hover:bg-[rgb(var(--surface))] hover:text-[rgb(var(--muted))]"
+                    className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-white transition hover:bg-white/10 hover:text-white"
                   >
                     <IconUser />
                   </button>
@@ -724,8 +694,8 @@ export function Navbar() {
                     aria-haspopup="true"
                     aria-label={`Account, ${customerName}`}
                     className={[
-                      'inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[rgb(var(--fg))] transition hover:bg-[rgb(var(--surface))] hover:text-[rgb(var(--muted))]',
-                      accountMenuOpen ? 'bg-[rgb(var(--surface))]' : '',
+                      'inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-white transition hover:bg-white/10 hover:text-white',
+                      accountMenuOpen ? 'bg-white/10' : '',
                     ].join(' ')}
                     onClick={() => {
                       if (!useHoverMega) {
@@ -743,25 +713,37 @@ export function Navbar() {
                     onMouseEnter={useHoverMega ? openAccountMenu : undefined}
                     onMouseLeave={useHoverMega ? scheduleCloseAccountMenu : undefined}
                   >
-                    <div className="rounded-2xl border border-[rgb(var(--border))] bg-[rgb(var(--inverse))] p-4 shadow-xl ring-1 ring-black/5">
-                      <div className="truncate text-sm font-semibold text-[rgb(var(--brand))]">{customerName}</div>
-                      <div className="mt-3 grid gap-2 text-sm text-[rgb(var(--fg))]">
-                        <Link to="/orders" className="hover:text-[rgb(var(--brand))]">
+                    <div className="rounded-2xl border border-white/12 bg-neutral-950/95 p-4 shadow-2xl ring-1 ring-white/10 backdrop-blur-md">
+                      <div className="truncate text-sm font-semibold text-white">{customerName}</div>
+                      <div className="mt-3 grid gap-0.5 border-t border-white/10 pt-3 text-sm">
+                        <Link
+                          to="/orders"
+                          className="rounded-lg px-2 py-2 text-white/90 transition hover:bg-white/10 hover:text-white"
+                        >
                           Orders
                         </Link>
-                        <Link to="/track-order" className="hover:text-[rgb(var(--brand))]">
+                        <Link
+                          to="/track-order"
+                          className="rounded-lg px-2 py-2 text-white/90 transition hover:bg-white/10 hover:text-white"
+                        >
                           Track my order
                         </Link>
-                        <Link to="/wallet" className="hover:text-[rgb(var(--brand))]">
+                        <Link
+                          to="/wallet"
+                          className="rounded-lg px-2 py-2 text-white/90 transition hover:bg-white/10 hover:text-white"
+                        >
                           Wallet
                         </Link>
-                        <Link to="/profile" className="font-medium hover:text-[rgb(var(--brand))]">
+                        <Link
+                          to="/profile"
+                          className="rounded-lg px-2 py-2 font-medium text-white/90 transition hover:bg-white/10 hover:text-white"
+                        >
                           Profile
                         </Link>
                         <button
                           type="button"
                           onClick={() => void signOut()}
-                          className="text-left text-red-600 hover:text-red-700"
+                          className="rounded-lg px-2 py-2 text-left text-red-400 transition hover:bg-red-950/50 hover:text-red-300"
                         >
                           Log out
                         </button>
@@ -773,7 +755,7 @@ export function Navbar() {
 
               <Link
                 to="/cart"
-                className="relative inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[rgb(var(--fg))] transition hover:bg-[rgb(var(--surface))] hover:text-[rgb(var(--muted))]"
+                className="relative inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-white transition hover:bg-white/10 hover:text-white"
                 aria-label={`Shopping bag, ${itemCount} items`}
               >
                 <IconBag />
@@ -788,7 +770,7 @@ export function Navbar() {
         </div>
       </div>
 
-      <div ref={megaAnchorRef} className="hidden border-t border-[rgb(var(--border))] md:block">
+      <div ref={megaAnchorRef} className="hidden border-t border-white/10 md:block">
         <div className="container-page relative">
           <nav
             className="relative z-0 flex min-h-0 min-w-0 items-center justify-center overflow-x-auto overflow-y-visible py-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
@@ -844,7 +826,7 @@ export function Navbar() {
           onMouseEnter={useHoverMega ? () => openMegaMenu(openMegaCat.id) : undefined}
           onMouseLeave={useHoverMega ? scheduleCloseMegaMenu : undefined}
         >
-          <div className="mx-auto max-h-[min(78dvh,36rem)] w-full max-w-7xl overflow-y-auto overflow-x-hidden rounded-2xl border border-[rgb(var(--border))] bg-[rgb(var(--inverse))] text-[rgb(var(--fg))] shadow-2xl ring-1 ring-black/5">
+          <div className="mx-auto max-h-[min(78dvh,36rem)] w-full max-w-7xl overflow-y-auto overflow-x-hidden rounded-2xl border border-white/12 bg-neutral-950/95 text-[rgb(var(--fg))] shadow-2xl ring-1 ring-white/10 backdrop-blur-md">
             <MegaMenuPanel cat={openMegaCat} />
           </div>
         </div>
@@ -858,12 +840,12 @@ export function Navbar() {
             aria-label="Close menu"
             onClick={closeMobile}
           />
-          <div className="fixed left-0 top-0 z-[121] flex h-full w-[min(20rem,88vw)] flex-col bg-[rgb(var(--inverse))] shadow-2xl md:hidden">
-            <div className="flex items-center justify-between border-b border-[rgb(var(--border))] px-4 py-3">
-              <span className="text-sm font-bold tracking-tight text-[rgb(var(--brand))]">Menu</span>
+          <div className="fixed left-0 top-0 z-[121] flex h-full w-[min(20rem,88vw)] flex-col border-r border-white/12 bg-neutral-950 shadow-2xl md:hidden">
+            <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
+              <span className="text-sm font-bold tracking-tight text-white">Menu</span>
               <button
                 type="button"
-                className="grid h-9 w-9 place-items-center rounded-full text-xl leading-none text-[rgb(var(--brand))] hover:bg-[rgb(var(--surface))]"
+                className="grid h-9 w-9 place-items-center rounded-full text-xl leading-none text-white hover:bg-white/10"
                 aria-label="Close menu"
                 onClick={closeMobile}
               >
@@ -876,7 +858,7 @@ export function Navbar() {
                   <Fragment key={cat.id}>
                     <Link
                       to={cat.children?.length ? `/categories/${cat.id}` : productCategoryHref(cat.id)}
-                      className="rounded-lg px-3 py-2.5 text-sm font-medium text-[rgb(var(--brand))] hover:bg-[rgb(var(--surface))]"
+                      className="rounded-lg px-3 py-2.5 text-sm font-medium text-white/90 hover:bg-white/10"
                       onClick={closeMobile}
                     >
                       {cat.label}
@@ -884,7 +866,7 @@ export function Navbar() {
                     {isMattressNavCategory(cat) ? (
                       <Link
                         to="/compare"
-                        className="ml-4 rounded-lg border-l-2 border-[rgb(var(--brand))]/40 py-2 pl-3 text-sm font-medium text-[rgb(var(--brand))] hover:bg-[rgb(var(--surface))]"
+                        className="ml-4 rounded-lg border-l-2 border-white/25 py-2 pl-3 text-sm font-medium text-white/85 hover:bg-white/10"
                         onClick={closeMobile}
                       >
                         Compare mattresses
@@ -895,7 +877,7 @@ export function Navbar() {
               ) : (
                 <Link
                   to="/categories"
-                  className="rounded-lg px-3 py-2.5 text-sm font-medium text-[rgb(var(--brand))] hover:bg-[rgb(var(--surface))]"
+                  className="rounded-lg px-3 py-2.5 text-sm font-medium text-white/90 hover:bg-white/10"
                   onClick={closeMobile}
                 >
                   Shop all
@@ -903,36 +885,36 @@ export function Navbar() {
               )}
               <Link
                 to="/categories"
-                className="rounded-lg px-3 py-2.5 text-sm font-medium text-[rgb(var(--brand))] hover:bg-[rgb(var(--surface))]"
+                className="rounded-lg px-3 py-2.5 text-sm font-medium text-white/90 hover:bg-white/10"
                 onClick={closeMobile}
               >
                 Explore
               </Link>
               <Link
                 to="/products"
-                className="rounded-lg px-3 py-2.5 text-sm font-semibold text-[rgb(var(--accent-sale))] hover:bg-[rgb(var(--surface))]"
+                className="rounded-lg px-3 py-2.5 text-sm font-semibold text-[rgb(var(--accent-sale))] hover:bg-white/10"
                 onClick={closeMobile}
               >
                 Sale
               </Link>
-              <div className="my-2 border-t border-[rgb(var(--border))]" />
+              <div className="my-2 border-t border-white/10" />
               <Link
                 to="/bulk-order"
-                className="rounded-lg px-3 py-2 text-sm text-[rgb(var(--muted))] hover:bg-[rgb(var(--surface))]"
+                className="rounded-lg px-3 py-2 text-sm text-[rgb(var(--muted))] hover:bg-white/10 hover:text-white"
                 onClick={closeMobile}
               >
                 Bulk order
               </Link>
               <Link
                 to="/track-order"
-                className="rounded-lg px-3 py-2 text-sm text-[rgb(var(--muted))] hover:bg-[rgb(var(--surface))]"
+                className="rounded-lg px-3 py-2 text-sm text-[rgb(var(--muted))] hover:bg-white/10 hover:text-white"
                 onClick={closeMobile}
               >
                 Track order
               </Link>
               <a
                 href={`mailto:${contactEmail}`}
-                className="rounded-lg px-3 py-2 text-sm text-[rgb(var(--muted))] hover:bg-[rgb(var(--surface))]"
+                className="rounded-lg px-3 py-2 text-sm text-[rgb(var(--muted))] hover:bg-white/10 hover:text-white"
                 onClick={closeMobile}
               >
                 Contact

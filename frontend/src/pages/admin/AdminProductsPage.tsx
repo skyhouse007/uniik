@@ -195,8 +195,8 @@ function categoryIdFromProduct(p: { category?: unknown }): string {
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-2xl border border-[rgb(var(--border))] bg-white p-5 text-neutral-900 shadow-sm">
-      <h2 className="text-sm font-semibold text-[rgb(var(--fg))]">{title}</h2>
+    <section className="rounded-2xl border border-white/[0.12] bg-neutral-950 p-5 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+      <h2 className="text-sm font-semibold text-white">{title}</h2>
       <div className="mt-4 space-y-3">{children}</div>
     </section>
   )
@@ -268,13 +268,23 @@ export function AdminProductsPage() {
   async function load() {
     setError('')
     setSuccess('')
-    const [cats, prods] = await Promise.all([
-      adminGet<{ items: Category[] }>('/categories'),
-      adminGet<{ items: any[] }>('/products', { page: 1, limit: 50, sort: 'newest' }),
-    ])
-    setCategories(cats.items)
-    setItems(prods.items)
-    if (!form.category && cats.items[0]?._id) setForm((f) => ({ ...f, category: cats.items[0]._id }))
+    const errs: string[] = []
+    try {
+      const cats = await adminGet<{ items: Category[] }>('/categories')
+      setCategories(cats.items)
+      if (!form.category && cats.items[0]?._id) setForm((f) => ({ ...f, category: cats.items[0]._id }))
+    } catch (e: any) {
+      errs.push(e?.response?.data?.error ?? 'Categories failed to load')
+      setCategories([])
+    }
+    try {
+      const prods = await adminGet<{ items: any[] }>('/products', { page: 1, limit: 50, sort: 'newest' })
+      setItems(prods.items)
+    } catch (e: any) {
+      errs.push(e?.response?.data?.error ?? 'Products failed to load')
+      setItems([])
+    }
+    if (errs.length) setError(errs.join(' · '))
   }
 
   useEffect(() => {
@@ -711,28 +721,26 @@ export function AdminProductsPage() {
   return (
     <div className="space-y-6">
       <Helmet>
-        <title>Admin Products — CozyFoam</title>
+        <title>Admin Products — Uniik</title>
       </Helmet>
 
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-lg font-bold text-[rgb(var(--fg))]">Products</h1>
-          <p className="mt-1 text-sm text-[rgb(var(--muted))]">Structured catalog: variants, specs, delivery pincodes</p>
+          <h1 className="text-lg font-bold text-white">Products</h1>
+          <p className="mt-1 text-sm text-white/60">Structured catalog: variants, specs, delivery pincodes</p>
         </div>
         <button
           type="button"
           onClick={() => load().catch(() => setError('Failed to refresh'))}
-          className="rounded-xl border border-[rgb(var(--border))] bg-white px-4 py-2 text-xs font-semibold"
+          className="admin-btn-outline"
         >
           Refresh
         </button>
       </div>
 
-      {error ? (
-        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{error}</div>
-      ) : null}
+      {error ? <div className="admin-alert-error">{error}</div> : null}
       {success ? (
-        <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900">
+        <div className="admin-alert-success">
           {success}
         </div>
       ) : null}
@@ -744,38 +752,38 @@ export function AdminProductsPage() {
               value={form.productName}
               onChange={(e) => setForm((f) => ({ ...f, productName: e.target.value }))}
               placeholder="Product name"
-              className="w-full rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm"
+              className="admin-field w-full"
             />
             <input
               value={form.modelName}
               onChange={(e) => setForm((f) => ({ ...f, modelName: e.target.value }))}
               placeholder="Model name (short)"
-              className="w-full rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm"
+              className="admin-field w-full"
             />
             <input
               value={form.slug}
               onChange={(e) => setForm((f) => ({ ...f, slug: e.target.value }))}
               placeholder="Slug (optional — auto if empty)"
-              className="w-full rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm"
+              className="admin-field w-full"
             />
             <textarea
               value={form.shortDescription}
               onChange={(e) => setForm((f) => ({ ...f, shortDescription: e.target.value }))}
               placeholder="Short description"
               rows={2}
-              className="w-full rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm"
+              className="admin-field w-full"
             />
             <textarea
               value={form.fullDescription}
               onChange={(e) => setForm((f) => ({ ...f, fullDescription: e.target.value }))}
               placeholder="Full description"
               rows={5}
-              className="w-full rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm"
+              className="admin-field w-full"
             />
             <select
               value={form.category}
               onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}
-              className="w-full rounded-xl border border-[rgb(var(--border))] bg-white px-3 py-2 text-sm"
+              className="admin-field w-full"
             >
               {categories.map((c) => (
                 <option key={c._id} value={c._id}>
@@ -788,12 +796,12 @@ export function AdminProductsPage() {
                 value={form.brand}
                 onChange={(e) => setForm((f) => ({ ...f, brand: e.target.value }))}
                 placeholder="Brand"
-                className="rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm"
+                className="admin-field w-full"
               />
               <select
                 value={form.firmness}
                 onChange={(e) => setForm((f) => ({ ...f, firmness: e.target.value }))}
-                className="rounded-xl border border-[rgb(var(--border))] bg-white px-3 py-2 text-sm"
+                className="admin-field w-full"
               >
                 <option value="soft">Soft</option>
                 <option value="medium">Medium</option>
@@ -805,13 +813,13 @@ export function AdminProductsPage() {
                 value={String(form.rating)}
                 onChange={(e) => setForm((f) => ({ ...f, rating: Number(e.target.value) }))}
                 placeholder="Rating"
-                className="rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm"
+                className="admin-field w-full"
               />
               <input
                 value={String(form.popularity)}
                 onChange={(e) => setForm((f) => ({ ...f, popularity: Number(e.target.value) }))}
                 placeholder="Popularity"
-                className="rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm"
+                className="admin-field w-full"
               />
             </div>
           </Section>
@@ -821,9 +829,9 @@ export function AdminProductsPage() {
               value={form.images}
               onChange={(e) => setForm((f) => ({ ...f, images: e.target.value }))}
               placeholder="Image URLs (comma separated)"
-              className="w-full rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm"
+              className="admin-field w-full"
             />
-            <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--surface))] px-3 py-2 text-xs font-semibold">
+            <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-white/20 bg-black/50 px-3 py-2 text-xs font-semibold text-white hover:bg-white/5">
               <input type="file" accept="image/*" multiple className="hidden" onChange={(e) => uploadImages(e.target.files)} />
               {uploading ? 'Uploading…' : 'Upload to Cloudinary'}
             </label>
@@ -831,15 +839,15 @@ export function AdminProductsPage() {
               value={form.thumbnail}
               onChange={(e) => setForm((f) => ({ ...f, thumbnail: e.target.value }))}
               placeholder="Thumbnail URL (optional)"
-              className="w-full rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm"
+              className="admin-field w-full"
             />
             <input
               value={form.model3DUrl}
               onChange={(e) => setForm((f) => ({ ...f, model3DUrl: e.target.value }))}
               placeholder="3D model URL"
-              className="w-full rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm"
+              className="admin-field w-full"
             />
-            <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--surface))] px-3 py-2 text-xs font-semibold">
+            <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-white/20 bg-black/50 px-3 py-2 text-xs font-semibold text-white hover:bg-white/5">
               <input type="file" accept=".glb,model/gltf-binary" className="hidden" onChange={(e) => uploadModel(e.target.files?.[0] ?? null)} />
               Upload .glb
             </label>
@@ -870,26 +878,26 @@ export function AdminProductsPage() {
               value={form.warrantyPeriod}
               onChange={(e) => setForm((f) => ({ ...f, warrantyPeriod: e.target.value }))}
               placeholder="Warranty (e.g. 10 Years)"
-              className="w-full rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm"
+              className="admin-field w-full"
             />
             <input
               value={form.deliveryTimeline}
               onChange={(e) => setForm((f) => ({ ...f, deliveryTimeline: e.target.value }))}
               placeholder="Delivery timeline"
-              className="w-full rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm"
+              className="admin-field w-full"
             />
             <textarea
               value={form.returnPolicy}
               onChange={(e) => setForm((f) => ({ ...f, returnPolicy: e.target.value }))}
               placeholder="Return policy"
               rows={2}
-              className="w-full rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm"
+              className="admin-field w-full"
             />
             <div className="grid grid-cols-2 gap-2">
               <select
                 value={form.promoBadgeType}
                 onChange={(e) => setForm((f) => ({ ...f, promoBadgeType: e.target.value }))}
-                className="rounded-xl border border-[rgb(var(--border))] bg-white px-3 py-2 text-sm"
+                className="admin-field w-full"
               >
                 <option value="best_seller">Best seller</option>
                 <option value="extra_offer">Extra offer</option>
@@ -901,7 +909,7 @@ export function AdminProductsPage() {
                 value={form.promoBadgeText}
                 onChange={(e) => setForm((f) => ({ ...f, promoBadgeText: e.target.value }))}
                 placeholder="Badge text"
-                className="rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm"
+                className="admin-field w-full"
               />
             </div>
           </Section>
@@ -909,7 +917,7 @@ export function AdminProductsPage() {
 
         <div className="space-y-4">
           <Section title="3. Variant pricing">
-            <div className="rounded-xl border border-[rgb(var(--brand))] bg-[rgb(var(--surface))] p-4">
+            <div className="rounded-xl border border-white/20 bg-black/50 p-4">
               <label className="flex cursor-pointer items-start gap-3">
                 <input
                   type="checkbox"
@@ -918,11 +926,11 @@ export function AdminProductsPage() {
                     const on = e.target.checked
                     setSimpleCustomForm((f) => ({ ...f, enabled: on }))
                   }}
-                  className="mt-1 h-4 w-4 accent-[rgb(var(--brand))]"
+                  className="mt-1 h-4 w-4 accent-white"
                 />
                 <div>
-                  <div className="text-sm font-semibold text-[rgb(var(--fg))]">Show “Custom” on the store</div>
-                  <p className="mt-1 text-xs text-[rgb(var(--muted))]">
+                  <div className="text-sm font-semibold text-white">Show “Custom” on the store</div>
+                  <p className="mt-1 text-xs text-white/60">
                     Adds a <strong>Custom</strong> type next to Single, Double, Queen, King so buyers can order any length ×
                     width (₹ per cu.in × L × W × T). Use the table below for fixed sizes; use this when you do not want to
                     add a separate <strong>Custom</strong> type group with the Custom column ticked.
@@ -930,77 +938,77 @@ export function AdminProductsPage() {
                 </div>
               </label>
               {simpleCustomForm.enabled ? (
-                <div className="mt-4 grid gap-3 border-t border-[rgb(var(--border))] pt-4 text-sm sm:grid-cols-2">
+                <div className="mt-4 grid gap-3 border-t border-white/10 pt-4 text-sm sm:grid-cols-2">
                   <div>
-                    <div className="text-[10px] font-semibold uppercase text-[rgb(var(--muted))]">₹ per cu.in (rate)</div>
+                    <div className="text-[10px] font-semibold uppercase text-white/50">₹ per cu.in (rate)</div>
                     <input
                       value={simpleCustomForm.pricePerCubicInch}
                       onChange={(e) => setSimpleCustomForm((f) => ({ ...f, pricePerCubicInch: e.target.value }))}
-                      className="mt-1 w-full rounded-lg border border-[rgb(var(--border))] px-2 py-2"
+                      className="admin-field-lg mt-1 w-full"
                       placeholder="e.g. 12"
                     />
                   </div>
                   <div>
-                    <div className="text-[10px] font-semibold uppercase text-[rgb(var(--muted))]">Discount %</div>
+                    <div className="text-[10px] font-semibold uppercase text-white/50">Discount %</div>
                     <input
                       value={simpleCustomForm.discountPercentage}
                       onChange={(e) => setSimpleCustomForm((f) => ({ ...f, discountPercentage: e.target.value }))}
-                      className="mt-1 w-full rounded-lg border border-[rgb(var(--border))] px-2 py-2"
+                      className="admin-field-lg mt-1 w-full"
                     />
                   </div>
                   <div className="sm:col-span-2">
-                    <div className="text-[10px] font-semibold uppercase text-[rgb(var(--muted))]">
+                    <div className="text-[10px] font-semibold uppercase text-white/50">
                       Thickness options (comma-separated)
                     </div>
                     <input
                       value={simpleCustomForm.thicknessOptions}
                       onChange={(e) => setSimpleCustomForm((f) => ({ ...f, thicknessOptions: e.target.value }))}
-                      className="mt-1 w-full rounded-lg border border-[rgb(var(--border))] px-2 py-2"
+                      className="admin-field-lg mt-1 w-full"
                       placeholder="6 inch, 8 inch, 10 inch"
                     />
                   </div>
                   <div>
-                    <div className="text-[10px] font-semibold uppercase text-[rgb(var(--muted))]">L min / max (in)</div>
+                    <div className="text-[10px] font-semibold uppercase text-white/50">L min / max (in)</div>
                     <div className="mt-1 flex gap-2">
                       <input
                         value={simpleCustomForm.customMinLengthIn}
                         onChange={(e) => setSimpleCustomForm((f) => ({ ...f, customMinLengthIn: e.target.value }))}
-                        className="w-full rounded-lg border border-[rgb(var(--border))] px-2 py-2"
+                        className="admin-field-lg w-full"
                       />
                       <input
                         value={simpleCustomForm.customMaxLengthIn}
                         onChange={(e) => setSimpleCustomForm((f) => ({ ...f, customMaxLengthIn: e.target.value }))}
-                        className="w-full rounded-lg border border-[rgb(var(--border))] px-2 py-2"
+                        className="admin-field-lg w-full"
                       />
                     </div>
                   </div>
                   <div>
-                    <div className="text-[10px] font-semibold uppercase text-[rgb(var(--muted))]">W min / max (in)</div>
+                    <div className="text-[10px] font-semibold uppercase text-white/50">W min / max (in)</div>
                     <div className="mt-1 flex gap-2">
                       <input
                         value={simpleCustomForm.customMinWidthIn}
                         onChange={(e) => setSimpleCustomForm((f) => ({ ...f, customMinWidthIn: e.target.value }))}
-                        className="w-full rounded-lg border border-[rgb(var(--border))] px-2 py-2"
+                        className="admin-field-lg w-full"
                       />
                       <input
                         value={simpleCustomForm.customMaxWidthIn}
                         onChange={(e) => setSimpleCustomForm((f) => ({ ...f, customMaxWidthIn: e.target.value }))}
-                        className="w-full rounded-lg border border-[rgb(var(--border))] px-2 py-2"
+                        className="admin-field-lg w-full"
                       />
                     </div>
                   </div>
                   <div>
-                    <div className="text-[10px] font-semibold uppercase text-[rgb(var(--muted))]">Stock</div>
+                    <div className="text-[10px] font-semibold uppercase text-white/50">Stock</div>
                     <input
                       value={simpleCustomForm.stock}
                       onChange={(e) => setSimpleCustomForm((f) => ({ ...f, stock: e.target.value }))}
-                      className="mt-1 w-full rounded-lg border border-[rgb(var(--border))] px-2 py-2"
+                      className="admin-field-lg mt-1 w-full"
                     />
                   </div>
                 </div>
               ) : null}
             </div>
-            <p className="mt-4 text-xs text-[rgb(var(--muted))]">
+            <p className="mt-4 text-xs text-white/55">
               <span className="font-semibold">Column 1 — Mattress type:</span> one group per type (presets: Single, Double,
               Queen, King, Custom).{' '}
               <span className="font-semibold">Column 2 — Custom:</span> tick for that row to price by{' '}
@@ -1011,10 +1019,10 @@ export function AdminProductsPage() {
               {variantGroups.map((group, gi) => (
                 <div
                   key={group.id}
-                  className="overflow-hidden rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--surface))]"
+                  className="overflow-hidden rounded-xl border border-white/12 bg-neutral-950"
                 >
-                  <div className="flex flex-wrap items-center gap-2 border-b border-[rgb(var(--border))] bg-white px-3 py-2">
-                    <span className="text-[10px] font-semibold uppercase tracking-wide text-[rgb(var(--muted))]">
+                  <div className="flex flex-wrap items-center gap-2 border-b border-white/10 bg-black px-3 py-2">
+                    <span className="text-[10px] font-semibold uppercase tracking-wide text-white/50">
                       Mattress type
                     </span>
                     <input
@@ -1025,7 +1033,7 @@ export function AdminProductsPage() {
                         )
                       }
                       placeholder="e.g. Single, Double, Queen, King, Custom"
-                      className="min-w-[12rem] flex-1 rounded-lg border border-[rgb(var(--border))] px-3 py-2 text-sm"
+                      className="admin-field-lg min-w-[12rem] flex-1"
                     />
                     <button
                       type="button"
@@ -1033,13 +1041,13 @@ export function AdminProductsPage() {
                       onClick={() =>
                         setVariantGroups((groups) => (groups.length <= 1 ? groups : groups.filter((_, i) => i !== gi)))
                       }
-                      className="rounded-lg border border-red-200 px-3 py-2 text-xs text-red-700 disabled:opacity-40"
+                      className="rounded-lg border border-red-500/40 bg-red-950/40 px-3 py-2 text-xs text-red-300 disabled:opacity-40"
                     >
                       Remove type
                     </button>
                   </div>
-                  <div className="flex flex-wrap items-center gap-2 border-b border-[rgb(var(--border))] bg-[rgb(var(--surface))] px-3 py-2">
-                    <span className="text-[10px] font-semibold uppercase tracking-wide text-[rgb(var(--muted))]">
+                  <div className="flex flex-wrap items-center gap-2 border-b border-white/10 bg-black/40 px-3 py-2">
+                    <span className="text-[10px] font-semibold uppercase tracking-wide text-white/50">
                       Type presets
                     </span>
                     {(['Single', 'Double', 'Queen', 'King', 'Custom'] as const).map((label) => {
@@ -1056,8 +1064,8 @@ export function AdminProductsPage() {
                           className={[
                             'rounded-full border px-3 py-1 text-xs font-semibold transition',
                             active
-                              ? 'border-[rgb(var(--brand))] bg-white text-[rgb(var(--brand))]'
-                              : 'border-[rgb(var(--border))] bg-white text-[rgb(var(--fg))] hover:border-[rgb(var(--muted))]',
+                              ? 'border-white bg-white text-neutral-900'
+                              : 'border-white/20 bg-transparent text-white hover:border-white/35 hover:bg-white/5',
                           ].join(' ')}
                         >
                           {label}
@@ -1067,10 +1075,10 @@ export function AdminProductsPage() {
                   </div>
                   <div className="overflow-x-auto">
                     <table className="w-full min-w-[860px] text-left text-xs">
-                      <thead className="border-b border-[rgb(var(--border))] text-[rgb(var(--muted))]">
+                      <thead className="border-b border-white/10 text-white/55">
                         <tr>
                           <th
-                            className="w-16 min-w-[4rem] px-2 py-2 text-center text-[10px] font-bold uppercase leading-tight text-[rgb(var(--fg))]"
+                            className="w-16 min-w-[4rem] px-2 py-2 text-center text-[10px] font-bold uppercase leading-tight text-white"
                             title="Custom: ₹ per cu.in × length × width × thickness"
                           >
                             Custom
@@ -1105,7 +1113,7 @@ export function AdminProductsPage() {
                             : computeVariantFinalPrice(Number(row.price) || 0, d)
                           return (
                             <Fragment key={ri}>
-                              <tr className="border-b border-[rgb(var(--border))]">
+                              <tr className="border-b border-white/10">
                                 <td className="p-1 text-center align-middle">
                                   <input
                                     type="checkbox"
@@ -1154,7 +1162,7 @@ export function AdminProductsPage() {
                                         ),
                                       )
                                     }
-                                    className="w-full rounded-lg border border-[rgb(var(--border))] bg-white px-2 py-1.5 text-sm read-only:bg-[rgb(var(--surface))]"
+                                    className="admin-field-lg w-full read-only:bg-neutral-900 read-only:text-white/75"
                                     placeholder="72x48"
                                   />
                                 </td>
@@ -1175,7 +1183,7 @@ export function AdminProductsPage() {
                                         ),
                                       )
                                     }
-                                    className="w-full rounded-lg border border-[rgb(var(--border))] bg-white px-2 py-1.5 text-sm"
+                                    className="admin-field-lg w-full"
                                     placeholder="6 inch"
                                   />
                                 </td>
@@ -1197,7 +1205,7 @@ export function AdminProductsPage() {
                                         ),
                                       )
                                     }
-                                    className="w-full rounded-lg border border-[rgb(var(--border))] bg-white px-2 py-1.5 text-sm read-only:bg-[rgb(var(--surface))]"
+                                    className="admin-field-lg w-full read-only:bg-neutral-900 read-only:text-white/75"
                                     placeholder={row.customVolumePricing ? '—' : ''}
                                   />
                                 </td>
@@ -1218,10 +1226,10 @@ export function AdminProductsPage() {
                                         ),
                                       )
                                     }
-                                    className="w-full rounded-lg border border-[rgb(var(--border))] bg-white px-2 py-1.5 text-sm"
+                                    className="admin-field-lg w-full"
                                   />
                                 </td>
-                                <td className="px-2 py-2 text-sm font-semibold tabular-nums">
+                                <td className="px-2 py-2 text-sm font-semibold tabular-nums text-white">
                                   ₹{fp.toLocaleString('en-IN')}
                                 </td>
                                 <td className="p-1">
@@ -1241,7 +1249,7 @@ export function AdminProductsPage() {
                                         ),
                                       )
                                     }
-                                    className="w-full rounded-lg border border-[rgb(var(--border))] bg-white px-2 py-1.5 text-sm"
+                                    className="admin-field-lg w-full"
                                   />
                                 </td>
                                 <td className="p-1 text-center">
@@ -1276,14 +1284,14 @@ export function AdminProductsPage() {
                                         }),
                                       )
                                     }
-                                    className="rounded-lg border border-red-200 px-2 py-1 text-red-700"
+                                    className="rounded-lg border border-red-500/40 bg-red-950/50 px-2 py-1 text-xs text-red-300 hover:bg-red-950/70"
                                   >
                                     ✕
                                   </button>
                                 </td>
                               </tr>
                               {row.customVolumePricing ? (
-                                <tr className="border-b border-[rgb(var(--border))] bg-white">
+                                <tr className="border-b border-white/10 bg-black/35">
                                   <td colSpan={9} className="px-3 py-2">
                                     <div className="flex flex-col gap-2 text-[11px]">
                                       {row.legacyAreaPricing ? (
@@ -1314,7 +1322,7 @@ export function AdminProductsPage() {
                                             ),
                                           )
                                         }
-                                        className="w-24 rounded-lg border border-[rgb(var(--border))] px-2 py-1.5 text-sm"
+                                        className="admin-field-lg w-24"
                                         placeholder="12"
                                       />
                                       {!row.legacyAreaPricing ? (
@@ -1336,7 +1344,7 @@ export function AdminProductsPage() {
                                                 ),
                                               )
                                             }
-                                            className="w-20 rounded-lg border border-[rgb(var(--border))] px-2 py-1.5 text-sm"
+                                            className="admin-field-lg w-20"
                                             placeholder="0"
                                           />
                                           <input
@@ -1355,7 +1363,7 @@ export function AdminProductsPage() {
                                                 ),
                                               )
                                             }
-                                            className="w-20 rounded-lg border border-[rgb(var(--border))] px-2 py-1.5 text-sm"
+                                            className="admin-field-lg w-20"
                                             placeholder="0"
                                           />
                                         </>
@@ -1377,7 +1385,7 @@ export function AdminProductsPage() {
                                             ),
                                           )
                                         }
-                                        className="w-16 rounded-lg border border-[rgb(var(--border))] px-2 py-1.5 text-sm"
+                                        className="admin-field-lg w-16"
                                       />
                                       <input
                                         value={row.customMaxLengthIn}
@@ -1395,7 +1403,7 @@ export function AdminProductsPage() {
                                             ),
                                           )
                                         }
-                                        className="w-16 rounded-lg border border-[rgb(var(--border))] px-2 py-1.5 text-sm"
+                                        className="admin-field-lg w-16"
                                       />
                                       <span className="text-[rgb(var(--muted))]">W min–max (in)</span>
                                       <input
@@ -1414,7 +1422,7 @@ export function AdminProductsPage() {
                                             ),
                                           )
                                         }
-                                        className="w-16 rounded-lg border border-[rgb(var(--border))] px-2 py-1.5 text-sm"
+                                        className="admin-field-lg w-16"
                                       />
                                       <input
                                         value={row.customMaxWidthIn}
@@ -1432,7 +1440,7 @@ export function AdminProductsPage() {
                                             ),
                                           )
                                         }
-                                        className="w-16 rounded-lg border border-[rgb(var(--border))] px-2 py-1.5 text-sm"
+                                        className="admin-field-lg w-16"
                                       />
                                       </div>
                                     </div>
@@ -1445,7 +1453,7 @@ export function AdminProductsPage() {
                       </tbody>
                     </table>
                   </div>
-                  <div className="border-t border-[rgb(var(--border))] bg-white px-3 py-2">
+                  <div className="border-t border-white/10 bg-black px-3 py-2">
                     <button
                       type="button"
                       onClick={() =>
@@ -1455,7 +1463,7 @@ export function AdminProductsPage() {
                           ),
                         )
                       }
-                      className="rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-xs font-semibold"
+                      className="admin-btn-outline"
                     >
                       + Add size / thickness row
                     </button>
@@ -1472,7 +1480,7 @@ export function AdminProductsPage() {
                     { id: newVariantGroupId(), category: 'Double', subRows: [emptyVariantRow()] },
                   ])
                 }
-                className="rounded-xl border border-[rgb(var(--border))] bg-white px-3 py-2 text-xs font-semibold"
+                className="admin-btn-outline"
               >
                 + Add mattress type
               </button>
@@ -1500,7 +1508,7 @@ export function AdminProductsPage() {
                     },
                   ])
                 }
-                className="rounded-xl border border-[rgb(var(--brand))] bg-[rgb(var(--surface))] px-3 py-2 text-xs font-semibold text-[rgb(var(--brand))]"
+                className="rounded-xl border border-white/30 bg-white/10 px-3 py-2 text-xs font-semibold text-white hover:bg-white/15"
               >
                 + Add Custom type (volume pricing)
               </button>
@@ -1516,7 +1524,7 @@ export function AdminProductsPage() {
                     setSpecRows((rows) => rows.map((r, i) => (i === idx ? { ...r, title: e.target.value } : r)))
                   }
                   placeholder="Title"
-                  className="min-w-[8rem] flex-1 rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm"
+                  className="admin-field min-w-[8rem] flex-1"
                 />
                 <input
                   value={row.value}
@@ -1524,12 +1532,12 @@ export function AdminProductsPage() {
                     setSpecRows((rows) => rows.map((r, i) => (i === idx ? { ...r, value: e.target.value } : r)))
                   }
                   placeholder="Value"
-                  className="min-w-[8rem] flex-[2] rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm"
+                  className="admin-field min-w-[8rem] flex-[2]"
                 />
                 <button
                   type="button"
                   onClick={() => setSpecRows((rows) => rows.filter((_, i) => i !== idx))}
-                  className="rounded-xl border border-red-200 px-3 py-2 text-xs text-red-700"
+                  className="rounded-xl border border-red-500/40 bg-red-950/40 px-3 py-2 text-xs font-semibold text-red-300 hover:bg-red-950/60"
                 >
                   Remove
                 </button>
@@ -1538,22 +1546,22 @@ export function AdminProductsPage() {
             <button
               type="button"
               onClick={() => setSpecRows((rows) => [...rows, { title: '', value: '' }])}
-              className="rounded-xl border border-[rgb(var(--border))] bg-white px-3 py-2 text-xs font-semibold"
+              className="admin-btn-outline"
             >
               + Add specification
             </button>
           </Section>
 
           <Section title="6. Pincode delivery">
-            <div className="rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--surface))] p-4">
-              <div className="text-xs font-semibold text-[rgb(var(--fg))]">Delivery zone (radius)</div>
-              <p className="mt-1 text-xs text-[rgb(var(--muted))]">
+            <div className="rounded-xl border border-white/12 bg-black/45 p-4">
+              <div className="text-xs font-semibold text-white">Delivery zone (radius)</div>
+              <p className="mt-1 text-xs text-white/60">
                 Set a center pincode and radius in km. Any customer pincode within that distance is deliverable
                 (approximate, using map coordinates). When this is set, it is used instead of the pincode list below.
               </p>
               <div className="mt-3 flex flex-wrap gap-2">
                 <div className="flex min-w-[10rem] flex-col gap-1">
-                  <label className="text-[10px] font-medium uppercase tracking-wide text-[rgb(var(--muted))]">
+                  <label className="text-[10px] font-medium uppercase tracking-wide text-white/50">
                     Center pincode
                   </label>
                   <input
@@ -1562,11 +1570,11 @@ export function AdminProductsPage() {
                     placeholder="560066"
                     maxLength={8}
                     inputMode="numeric"
-                    className="rounded-xl border border-[rgb(var(--border))] bg-white px-3 py-2 text-sm"
+                    className="admin-field w-full"
                   />
                 </div>
                 <div className="flex w-28 flex-col gap-1">
-                  <label className="text-[10px] font-medium uppercase tracking-wide text-[rgb(var(--muted))]">
+                  <label className="text-[10px] font-medium uppercase tracking-wide text-white/50">
                     Radius (km)
                   </label>
                   <input
@@ -1574,11 +1582,11 @@ export function AdminProductsPage() {
                     onChange={(e) => setDeliveryRadiusKm(e.target.value)}
                     placeholder="30"
                     inputMode="decimal"
-                    className="rounded-xl border border-[rgb(var(--border))] bg-white px-3 py-2 text-sm"
+                    className="admin-field w-full"
                   />
                 </div>
                 <div className="flex w-28 flex-col gap-1">
-                  <label className="text-[10px] font-medium uppercase tracking-wide text-[rgb(var(--muted))]">
+                  <label className="text-[10px] font-medium uppercase tracking-wide text-white/50">
                     Days (ETA)
                   </label>
                   <input
@@ -1586,12 +1594,12 @@ export function AdminProductsPage() {
                     onChange={(e) => setRadiusDeliveryDays(e.target.value)}
                     placeholder="3"
                     inputMode="numeric"
-                    className="rounded-xl border border-[rgb(var(--border))] bg-white px-3 py-2 text-sm"
+                    className="admin-field w-full"
                   />
                 </div>
               </div>
             </div>
-            <p className="text-xs text-[rgb(var(--muted))]">
+            <p className="text-xs text-white/55">
               Pincode list (optional): use when you are not using radius mode, or leave radius fields empty.
             </p>
             {pinRows.map((row, idx) => (
@@ -1602,7 +1610,7 @@ export function AdminProductsPage() {
                     setPinRows((rows) => rows.map((r, i) => (i === idx ? { ...r, pincode: e.target.value } : r)))
                   }
                   placeholder="560001"
-                  className="w-28 rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm"
+                  className="admin-field w-28"
                 />
                 <input
                   value={row.deliveryDays}
@@ -1610,12 +1618,12 @@ export function AdminProductsPage() {
                     setPinRows((rows) => rows.map((r, i) => (i === idx ? { ...r, deliveryDays: e.target.value } : r)))
                   }
                   placeholder="Days"
-                  className="w-24 rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm"
+                  className="admin-field w-24"
                 />
                 <button
                   type="button"
                   onClick={() => setPinRows((rows) => rows.filter((_, i) => i !== idx))}
-                  className="rounded-xl border border-red-200 px-3 py-2 text-xs text-red-700"
+                  className="rounded-xl border border-red-500/40 bg-red-950/40 px-3 py-2 text-xs font-semibold text-red-300 hover:bg-red-950/60"
                 >
                   Remove
                 </button>
@@ -1624,7 +1632,7 @@ export function AdminProductsPage() {
             <button
               type="button"
               onClick={() => setPinRows((rows) => [...rows, { pincode: '', deliveryDays: '3' }])}
-              className="rounded-xl border border-[rgb(var(--border))] bg-white px-3 py-2 text-xs font-semibold"
+              className="admin-btn-outline"
             >
               + Add pincode
             </button>
@@ -1635,7 +1643,7 @@ export function AdminProductsPage() {
               type="button"
               disabled={!canSubmit || saving}
               onClick={() => void submit()}
-              className="rounded-xl bg-[rgb(var(--brand))] px-6 py-3 text-sm font-semibold text-white disabled:opacity-50"
+              className="rounded-xl bg-white px-6 py-3 text-sm font-semibold text-neutral-900 transition hover:bg-white/90 disabled:opacity-50"
             >
               {saving ? 'Saving…' : editingId ? 'Update product' : 'Create product'}
             </button>
@@ -1647,7 +1655,7 @@ export function AdminProductsPage() {
                   setSuccess('')
                   setError('')
                 }}
-                className="rounded-xl border border-[rgb(var(--border))] px-6 py-3 text-sm font-semibold"
+                className="admin-btn-outline px-6 py-3 text-sm"
               >
                 Cancel edit
               </button>
@@ -1656,19 +1664,19 @@ export function AdminProductsPage() {
         </div>
       </div>
 
-      <section className="rounded-2xl border border-[rgb(var(--border))] bg-white p-5 text-neutral-900 shadow-sm">
-        <h2 className="text-sm font-semibold">Catalog</h2>
-        <div className="mt-4 divide-y divide-[rgb(var(--border))]">
+      <section className="rounded-2xl border border-white/[0.12] bg-neutral-950 p-5 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+        <h2 className="text-sm font-semibold text-white">Catalog</h2>
+        <div className="mt-4 divide-y divide-white/10">
           {items === null ? (
-            <div className="py-6 text-sm text-[rgb(var(--muted))]">Loading…</div>
+            <div className="py-6 text-sm text-white/55">Loading…</div>
           ) : items.length === 0 ? (
-            <div className="py-6 text-sm text-[rgb(var(--muted))]">No products</div>
+            <div className="py-6 text-sm text-white/55">No products</div>
           ) : (
             items.map((p) => (
               <div key={p._id} className="flex flex-wrap items-center justify-between gap-3 py-4">
                 <div>
-                  <div className="font-semibold">{p.productName}</div>
-                  <div className="text-xs text-[rgb(var(--muted))]">
+                  <div className="font-semibold text-white">{p.productName}</div>
+                  <div className="text-xs text-white/55">
                     {p.modelName} · {p.variants?.length ?? 0} variants · from ₹
                     {(p.minFinalPrice ?? 0).toLocaleString('en-IN')}
                   </div>
@@ -1677,7 +1685,7 @@ export function AdminProductsPage() {
                   <button
                     type="button"
                     onClick={() => void startEdit(p)}
-                    className="rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-xs font-semibold"
+                    className="admin-btn-outline"
                   >
                     Edit
                   </button>
@@ -1692,7 +1700,7 @@ export function AdminProductsPage() {
                         setError(e?.response?.data?.error ?? 'Delete failed')
                       }
                     }}
-                    className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs font-semibold text-red-800"
+                    className="rounded-xl border border-red-500/40 bg-red-950/45 px-3 py-2 text-xs font-semibold text-red-200 hover:bg-red-950/65"
                   >
                     Delete
                   </button>

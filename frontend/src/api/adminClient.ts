@@ -3,7 +3,8 @@ import { getAdminToken } from '../utils/adminAuth'
 
 export function adminHeaders(): Record<string, string> {
   const token = getAdminToken()
-  return token ? { Authorization: `Bearer ${token}` } : {}
+  /** Use a dedicated header so Clerk/other middleware never parses admin JWT as `Authorization`. */
+  return token ? { 'X-Admin-Token': token } : {}
 }
 
 /** Avoid conditional GET (304 + empty body): Express sets ETag on JSON; axios often leaves `data` empty on 304. */

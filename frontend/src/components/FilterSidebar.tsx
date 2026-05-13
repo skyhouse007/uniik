@@ -33,8 +33,8 @@ export function FilterSidebar() {
   }
 
   return (
-    <aside className="rounded-2xl border border-[rgb(var(--border))] bg-white p-4 shadow-sm">
-      <div className="text-sm font-semibold">Filters</div>
+    <aside className="rounded-2xl border border-white/12 bg-black/45 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] backdrop-blur-sm">
+      <div className="text-sm font-semibold text-[rgb(var(--fg))]">Filters</div>
 
       <div className="mt-4 space-y-4">
         <div>
@@ -44,14 +44,14 @@ export function FilterSidebar() {
               value={state.minPrice ?? ''}
               onChange={(e) => update({ minPrice: e.target.value ? Number(e.target.value) : undefined })}
               placeholder="Min"
-              className="rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm outline-none focus:border-[rgb(var(--brand))]"
+              className="rounded-xl border border-white/20 bg-black px-3 py-2 text-sm text-white outline-none placeholder:text-white/35 focus:border-white/45"
               inputMode="numeric"
             />
             <input
               value={state.maxPrice ?? ''}
               onChange={(e) => update({ maxPrice: e.target.value ? Number(e.target.value) : undefined })}
               placeholder="Max"
-              className="rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm outline-none focus:border-[rgb(var(--brand))]"
+              className="rounded-xl border border-white/20 bg-black px-3 py-2 text-sm text-white outline-none placeholder:text-white/35 focus:border-white/45"
               inputMode="numeric"
             />
           </div>
@@ -63,7 +63,7 @@ export function FilterSidebar() {
             value={state.size}
             onChange={(e) => update({ size: e.target.value })}
             placeholder="e.g. 72x60"
-            className="mt-2 w-full rounded-xl border border-[rgb(var(--border))] bg-white px-3 py-2 text-sm outline-none focus:border-[rgb(var(--brand))]"
+            className="mt-2 w-full rounded-xl border border-white/20 bg-black px-3 py-2 text-sm text-white outline-none placeholder:text-white/35 focus:border-white/45"
           />
         </div>
 
@@ -72,7 +72,7 @@ export function FilterSidebar() {
           <select
             value={state.firmness}
             onChange={(e) => update({ firmness: e.target.value })}
-            className="mt-2 w-full rounded-xl border border-[rgb(var(--border))] bg-white px-3 py-2 text-sm outline-none focus:border-[rgb(var(--brand))]"
+            className="mt-2 w-full rounded-xl border border-white/20 bg-black px-3 py-2 text-sm text-white outline-none focus:border-white/45"
           >
             <option value="">Any</option>
             <option value="soft">Soft</option>
@@ -86,8 +86,8 @@ export function FilterSidebar() {
           <input
             value={state.brand}
             onChange={(e) => update({ brand: e.target.value })}
-            placeholder="e.g. CozyFoam"
-            className="mt-2 w-full rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm outline-none focus:border-[rgb(var(--brand))]"
+            placeholder="e.g. Uniik"
+            className="mt-2 w-full rounded-xl border border-white/20 bg-black px-3 py-2 text-sm text-white outline-none placeholder:text-white/35 focus:border-white/45"
           />
         </div>
 
@@ -96,7 +96,7 @@ export function FilterSidebar() {
           <select
             value={String(state.minRating ?? 0)}
             onChange={(e) => update({ minRating: Number(e.target.value) })}
-            className="mt-2 w-full rounded-xl border border-[rgb(var(--border))] bg-white px-3 py-2 text-sm outline-none focus:border-[rgb(var(--brand))]"
+            className="mt-2 w-full rounded-xl border border-white/20 bg-black px-3 py-2 text-sm text-white outline-none focus:border-white/45"
           >
             <option value="0">Any</option>
             <option value="3">3★ & up</option>
@@ -107,7 +107,7 @@ export function FilterSidebar() {
 
         <button
           onClick={() => navigate('/products')}
-          className="w-full rounded-xl border border-[rgb(var(--border))] bg-white px-3 py-2 text-sm font-semibold hover:border-[rgb(var(--brand))]"
+          className="w-full rounded-xl border border-white/20 bg-transparent px-3 py-2 text-sm font-semibold text-white transition hover:border-white/40 hover:bg-white/5"
         >
           Clear all
         </button>

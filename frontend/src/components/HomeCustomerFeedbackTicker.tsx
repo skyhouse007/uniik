@@ -59,14 +59,14 @@ function usePrefersReducedMotion() {
 
 function FeedbackCard({ item }: { item: FeedbackItem }) {
   return (
-    <figure className="flex h-full min-w-[min(100vw-3rem,22rem)] max-w-[22rem] shrink-0 flex-col rounded-2xl border border-white/15 bg-white/[0.05] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
-      <span className="inline-flex w-fit rounded-full bg-[#f5f0e8]/15 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[#f5f0e8] ring-1 ring-[#f5f0e8]/25">
+    <figure className="flex h-full min-w-[min(100vw-3rem,22rem)] max-w-[22rem] shrink-0 flex-col rounded-2xl border border-neutral-700 bg-neutral-950 p-5 shadow-sm">
+      <span className="inline-flex w-fit rounded-full bg-white/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-neutral-100 ring-1 ring-white/15">
         {item.tag}
       </span>
-      <blockquote className="mt-3 flex-1 text-sm leading-relaxed text-white/88">&ldquo;{item.quote}&rdquo;</blockquote>
-      <figcaption className="mt-4 border-t border-white/10 pt-4">
-        <div className="text-sm font-semibold text-white">{item.name}</div>
-        <div className="mt-0.5 text-xs text-white/55">{item.venue}</div>
+      <blockquote className="mt-3 flex-1 text-sm leading-relaxed text-neutral-300">&ldquo;{item.quote}&rdquo;</blockquote>
+      <figcaption className="mt-4 border-t border-neutral-800 pt-4">
+        <div className="text-sm font-semibold text-neutral-50">{item.name}</div>
+        <div className="mt-0.5 text-xs text-neutral-500">{item.venue}</div>
       </figcaption>
     </figure>
   )
@@ -76,13 +76,13 @@ export function HomeCustomerFeedbackTicker() {
   const reducedMotion = usePrefersReducedMotion()
 
   return (
-    <section className="border-y border-[rgb(var(--border))] bg-black py-12 lg:py-14" aria-labelledby="home-feedback-heading">
+    <section className="border-y border-neutral-800 bg-black py-12 lg:py-14" aria-labelledby="home-feedback-heading">
       <div className="container-page mb-8 max-w-4xl text-center lg:mb-10 lg:text-left">
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/70">Hospitality partners</p>
-        <h2 id="home-feedback-heading" className="mt-2 font-header text-2xl font-semibold tracking-tight text-white sm:text-3xl">
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-neutral-500">Hospitality partners</p>
+        <h2 id="home-feedback-heading" className="mt-2 font-header text-2xl font-semibold tracking-tight text-neutral-50 sm:text-3xl">
           Feedback from our customers
         </h2>
-        <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-white/65 lg:mx-0">
+        <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-neutral-400 lg:mx-0">
           Outdoor seating that survives real weather and heavy footfall — hear from property owners and café operators who specify Uniik.
         </p>
       </div>

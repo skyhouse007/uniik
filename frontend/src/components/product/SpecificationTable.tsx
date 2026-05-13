@@ -12,21 +12,21 @@ export function SpecificationTable({ specifications }: Props) {
   }
 
   return (
-    <div className="overflow-hidden rounded-xl border border-[rgb(var(--border))]">
+    <div className="overflow-hidden rounded-xl border border-white/12">
       <table className="w-full text-sm">
         <tbody>
           {specifications.map((row, idx) => (
             <tr
               key={`${row.title}-${idx}`}
-              className={idx % 2 === 0 ? 'bg-white' : 'bg-[rgb(var(--surface))]'}
+              className={idx % 2 === 0 ? 'bg-white/[0.04]' : 'bg-white/[0.07]'}
             >
               <th
                 scope="row"
-                className="w-[40%] border-b border-[rgb(var(--border))] px-4 py-3 text-left font-medium text-[rgb(var(--muted))]"
+                className="w-[40%] border-b border-white/10 px-4 py-3 text-left font-medium text-[rgb(var(--muted))]"
               >
                 {row.title}
               </th>
-              <td className="border-b border-[rgb(var(--border))] px-4 py-3 font-medium text-[rgb(var(--fg))]">
+              <td className="border-b border-white/10 px-4 py-3 font-medium text-[rgb(var(--fg))]">
                 {row.value}
               </td>
             </tr>

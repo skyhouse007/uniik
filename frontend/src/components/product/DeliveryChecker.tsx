@@ -39,7 +39,7 @@ export function DeliveryChecker({ productId }: Props) {
   }
 
   return (
-    <div className="rounded-2xl border border-[rgb(var(--border))] bg-[rgb(var(--surface))] p-4">
+    <div className="rounded-2xl border border-white/12 bg-black/45 p-4 backdrop-blur-sm">
       <div className="text-xs font-semibold uppercase tracking-wide text-[rgb(var(--muted))]">Delivery checker</div>
       <p className="mt-1 text-xs text-[rgb(var(--muted))]">Enter your pincode to see the estimated delivery date.</p>
       <div className="mt-3 flex flex-wrap gap-2">
@@ -49,13 +49,13 @@ export function DeliveryChecker({ productId }: Props) {
           placeholder="560001"
           maxLength={8}
           inputMode="numeric"
-          className="min-w-[8rem] flex-1 rounded-xl border border-[rgb(var(--border))] bg-white px-3 py-2 text-sm outline-none focus:border-[rgb(var(--brand))]"
+          className="min-w-[8rem] flex-1 rounded-xl border border-white/20 bg-black px-3 py-2 text-sm text-white outline-none placeholder:text-white/35 focus:border-white/45"
         />
         <button
           type="button"
           onClick={() => void check()}
           disabled={loading}
-          className="rounded-xl bg-[rgb(var(--brand))] px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+          className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-neutral-900 transition hover:bg-neutral-200 disabled:opacity-50"
         >
           {loading ? 'Checking…' : 'Check'}
         </button>
@@ -63,8 +63,10 @@ export function DeliveryChecker({ productId }: Props) {
       {message ? (
         <div
           className={[
-            'mt-3 rounded-xl px-3 py-2 text-sm',
-            ok ? 'bg-emerald-50 text-emerald-900' : 'bg-red-50 text-red-800',
+            'mt-3 rounded-xl border px-3 py-2 text-sm',
+            ok
+              ? 'border-emerald-500/35 bg-emerald-950/40 text-emerald-100'
+              : 'border-red-500/35 bg-red-950/40 text-red-100',
           ].join(' ')}
         >
           {message}

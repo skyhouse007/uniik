@@ -4,7 +4,7 @@ const HERO_IMAGE_SRC = '/images/hero-uniik.png'
 export function HomeHeroBanner() {
   return (
     <section
-      className="relative w-full scroll-mt-[var(--site-header-height)] overflow-hidden bg-page-gradient"
+      className="relative w-full scroll-mt-[var(--site-header-height)] overflow-hidden bg-black"
       aria-label="Hero image"
     >
       <div className="relative w-full aspect-[16/9]">

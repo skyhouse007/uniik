@@ -306,14 +306,14 @@ export function ProductDetailsPage() {
   return (
     <div className="container-page py-8">
       <Helmet>
-        <title>{product ? `${product.productName} — CozyFoam` : 'Product — CozyFoam'}</title>
-        <meta name="description" content={product?.shortDescription ?? 'Premium mattress details'} />
+        <title>{product ? `${product.productName} — Uniik` : 'Product — Uniik'}</title>
+        <meta name="description" content={product?.shortDescription ?? 'Premium outdoor furniture details'} />
       </Helmet>
 
       <Breadcrumb
         items={[
           { label: 'Home', to: '/' },
-          { label: 'Mattresses', to: '/products' },
+          { label: 'Products', to: '/products' },
           { label: product?.productName ?? 'Loading…' },
         ]}
       />
@@ -327,9 +327,9 @@ export function ProductDetailsPage() {
           )}
 
           <div className="mt-10 grid gap-7">
-            <section className="rounded-3xl border border-[rgb(var(--border))] bg-white p-6 shadow-sm transition hover:shadow-md">
+            <section className="rounded-3xl border border-white/12 bg-black/45 p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-sm transition hover:border-white/18">
               <div className="font-header text-base font-semibold tracking-tight text-[rgb(var(--fg))]">
-                About this mattress
+                About this product
               </div>
               <p className="mt-2 text-sm leading-relaxed text-[rgb(var(--muted))]">
                 {product ? product.shortDescription : 'Loading…'}
@@ -339,7 +339,7 @@ export function ProductDetailsPage() {
               </div>
             </section>
 
-            <section className="rounded-3xl border border-[rgb(var(--border))] bg-white p-6 shadow-sm transition hover:shadow-md">
+            <section className="rounded-3xl border border-white/12 bg-black/45 p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-sm transition hover:border-white/18">
               <div className="font-header text-base font-semibold tracking-tight text-[rgb(var(--fg))]">
                 Specifications
               </div>
@@ -350,21 +350,21 @@ export function ProductDetailsPage() {
 
             <ReviewSection reviews={reviews} />
 
-            <section className="rounded-3xl border border-[rgb(var(--border))] bg-white p-6 shadow-sm transition hover:shadow-md">
+            <section className="rounded-3xl border border-white/12 bg-black/45 p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-sm transition hover:border-white/18">
               <div className="font-header text-base font-semibold tracking-tight text-[rgb(var(--fg))]">FAQ</div>
-              <div className="mt-4 divide-y divide-[rgb(var(--border))]">
+              <div className="mt-4 divide-y divide-white/10">
                 {[
                   {
-                    q: 'Is this mattress good for back pain?',
-                    a: 'Our latex builds are designed for balanced support and pressure relief. If you prefer firmer spinal alignment, choose a firmer feel in the configuration.',
+                    q: 'Is this suitable for outdoor use?',
+                    a: 'Materials and finishes are chosen for open-air durability. Check specifications for care and exposure guidance for your climate.',
                   },
                   {
                     q: 'How long does delivery take?',
                     a: product?.deliveryTimeline ?? 'Delivery timelines vary by location.',
                   },
                   {
-                    q: 'Is the cover washable?',
-                    a: 'If your model includes a removable cover, spot-cleaning is recommended. Refer to the product specifications and care label for best results.',
+                    q: 'How do I clean or maintain it?',
+                    a: 'Follow the care notes in the specifications and any labels on the product for best results.',
                   },
                   {
                     q: 'What is the warranty?',
@@ -386,7 +386,7 @@ export function ProductDetailsPage() {
           </div>
         </div>
 
-        <aside className="h-fit rounded-3xl border border-[rgb(var(--border))] bg-white p-7 shadow-sm lg:sticky lg:top-[96px]">
+        <aside className="h-fit rounded-3xl border border-white/12 bg-black/45 p-7 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-sm lg:sticky lg:top-[96px]">
           {product ? (
             <>
               <div className="text-xs font-semibold uppercase tracking-wide text-[rgb(var(--muted))]">
@@ -400,7 +400,7 @@ export function ProductDetailsPage() {
                 <span aria-hidden className="text-[rgb(var(--border))]">
                   ·
                 </span>
-                <span className="text-[13px]">Premium comfort</span>
+                <span className="text-[13px] text-white/80">Premium quality</span>
               </div>
 
               <p className="mt-4 text-sm leading-relaxed text-[rgb(var(--muted))]">
@@ -410,7 +410,7 @@ export function ProductDetailsPage() {
               {variant ? (
                 <>
                   {variant.isPopular ? (
-                    <div className="mt-4 inline-flex rounded-full bg-[rgb(var(--brand))] px-3 py-1 text-xs font-semibold text-white shadow-sm">
+                    <div className="mt-4 inline-flex rounded-full bg-white px-3 py-1 text-xs font-semibold text-neutral-900 shadow-sm">
                       Most popular choice
                     </div>
                   ) : null}
@@ -432,7 +432,7 @@ export function ProductDetailsPage() {
                         if (!addPayload) return
                         dispatch(cartActions.addToCart(addPayload))
                       }}
-                      className="rounded-2xl bg-[rgb(var(--brand))] px-5 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[rgb(var(--brand-hover))] hover:shadow-md disabled:opacity-50"
+                      className="rounded-2xl bg-white px-5 py-3.5 text-sm font-semibold text-neutral-900 shadow-sm transition hover:bg-neutral-200 hover:shadow-md disabled:opacity-50"
                     >
                       Add to cart
                     </button>
@@ -444,11 +444,11 @@ export function ProductDetailsPage() {
                         dispatch(cartActions.addToCart(addPayload))
                         navigate('/checkout')
                       }}
-                      className="rounded-2xl border border-[rgb(var(--border))] bg-white px-5 py-3.5 text-sm font-semibold text-[rgb(var(--fg))] shadow-sm transition hover:border-[rgb(var(--muted))] hover:shadow"
+                      className="rounded-2xl border border-white/25 bg-transparent px-5 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:border-white/45 hover:bg-white/10 disabled:opacity-50"
                     >
                       Buy now
                     </button>
-                    <Link to="/cart" className="text-center text-xs font-semibold text-[rgb(var(--brand))]">
+                    <Link to="/cart" className="text-center text-xs font-semibold text-white/90 underline-offset-4 hover:text-white hover:underline">
                       View cart
                     </Link>
                   </div>
@@ -501,21 +501,21 @@ export function ProductDetailsPage() {
                 </>
               )}
 
-              <div className="mt-6 grid gap-3 rounded-2xl bg-[rgb(var(--surface))] p-4 text-sm">
+              <div className="mt-6 grid gap-3 rounded-2xl border border-white/10 bg-black/55 p-4 text-sm">
                 <div className="grid grid-cols-3 gap-3">
-                  <div className="rounded-xl bg-white/60 p-3">
+                  <div className="rounded-xl border border-white/10 bg-white/[0.06] p-3">
                     <div className="text-[11px] font-semibold uppercase tracking-wide text-[rgb(var(--muted))]">
                       Warranty
                     </div>
                     <div className="mt-1 font-medium text-[rgb(var(--fg))]">{product.warrantyPeriod}</div>
                   </div>
-                  <div className="rounded-xl bg-white/60 p-3">
+                  <div className="rounded-xl border border-white/10 bg-white/[0.06] p-3">
                     <div className="text-[11px] font-semibold uppercase tracking-wide text-[rgb(var(--muted))]">
                       Delivery
                     </div>
                     <div className="mt-1 font-medium text-[rgb(var(--fg))]">{product.deliveryTimeline}</div>
                   </div>
-                  <div className="rounded-xl bg-white/60 p-3">
+                  <div className="rounded-xl border border-white/10 bg-white/[0.06] p-3">
                     <div className="text-[11px] font-semibold uppercase tracking-wide text-[rgb(var(--muted))]">
                       Returns
                     </div>
@@ -523,13 +523,13 @@ export function ProductDetailsPage() {
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="rounded-xl bg-white/60 p-3">
+                  <div className="rounded-xl border border-white/10 bg-white/[0.06] p-3">
                     <div className="text-[11px] font-semibold uppercase tracking-wide text-[rgb(var(--muted))]">
                       Safe payment
                     </div>
                     <div className="mt-1 text-[13px] font-medium text-[rgb(var(--fg))]">Secure checkout</div>
                   </div>
-                  <div className="rounded-xl bg-white/60 p-3">
+                  <div className="rounded-xl border border-white/10 bg-white/[0.06] p-3">
                     <div className="text-[11px] font-semibold uppercase tracking-wide text-[rgb(var(--muted))]">
                       Support
                     </div>
@@ -556,13 +556,13 @@ export function ProductDetailsPage() {
       </div>
 
       {related.length ? (
-        <section className="mt-10">
+        <section className="mt-10 border-t border-white/10 pt-10">
           <div className="flex items-end justify-between">
             <div>
-              <div className="text-sm font-semibold">Related products</div>
+              <div className="font-header text-sm font-semibold text-[rgb(var(--fg))]">Related products</div>
               <div className="mt-1 text-xs text-[rgb(var(--muted))]">More options you may like</div>
             </div>
-            <Link to="/products" className="text-xs font-semibold text-[rgb(var(--brand))]">
+            <Link to="/products" className="text-xs font-semibold text-white underline-offset-4 hover:underline">
               Browse all
             </Link>
           </div>

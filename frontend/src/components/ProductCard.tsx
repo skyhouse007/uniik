@@ -9,11 +9,11 @@ function formatMoney(n: number) {
 }
 
 function badgeTheme(type: Product['promoBadgeType'] | undefined) {
-  if (type === 'best_seller') return 'bg-orange-500 text-white'
-  if (type === 'extra_offer') return 'bg-teal-500 text-white'
-  if (type === 'last_chance') return 'bg-red-500 text-white'
-  if (type === 'trial_100_nights') return 'bg-teal-600 text-white'
-  return 'bg-orange-500 text-white'
+  if (type === 'best_seller') return 'bg-orange-500/90 text-white'
+  if (type === 'extra_offer') return 'bg-teal-500/90 text-white'
+  if (type === 'last_chance') return 'bg-red-500/90 text-white'
+  if (type === 'trial_100_nights') return 'bg-teal-600/90 text-white'
+  return 'bg-orange-500/90 text-white'
 }
 
 export function ProductCard({ product }: { product: Product }) {
@@ -32,16 +32,16 @@ export function ProductCard({ product }: { product: Product }) {
   const discountPct = minV?.discountPercentage ?? 0
 
   return (
-    <div className="group flex h-full flex-col rounded-3xl border border-slate-100 bg-white p-4 shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-2xl">
+    <div className="group flex h-full flex-col rounded-3xl border border-white/12 bg-black/45 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-white/20 hover:shadow-xl">
       <Link to={`/products/${product._id}`} className="block flex-1">
-        <div className="flex items-center justify-between rounded-2xl border border-slate-100 bg-gradient-to-r from-slate-50 to-white px-3 py-2">
+        <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.06] px-3 py-2">
           <div className="min-w-0">
             <div
               className={`inline-flex rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide ${badgeTheme(product.promoBadgeType)}`}
             >
               {product.promoBadgeText ?? 'Special'}
             </div>
-            <div className="mt-1 truncate text-[10px] font-semibold uppercase tracking-wide text-slate-600">
+            <div className="mt-1 truncate text-[10px] font-semibold uppercase tracking-wide text-[rgb(var(--muted))]">
               {product.modelName}
             </div>
           </div>
@@ -53,7 +53,7 @@ export function ProductCard({ product }: { product: Product }) {
             }}
             className={[
               'rounded-full p-1.5 text-lg transition-colors duration-300',
-              wished ? 'text-red-500' : 'text-slate-400 hover:text-red-500',
+              wished ? 'text-red-400' : 'text-white/40 hover:text-red-400',
             ].join(' ')}
             aria-label="Wishlist"
           >
@@ -61,8 +61,8 @@ export function ProductCard({ product }: { product: Product }) {
           </button>
         </div>
 
-        <div className="mt-3 aspect-[4/3] rounded-xl border border-slate-100 bg-white p-3">
-          <div className="grid h-full w-full place-items-center overflow-hidden rounded-xl bg-gradient-to-br from-blue-100 to-slate-100">
+        <div className="mt-3 aspect-[4/3] rounded-xl border border-white/10 bg-black/50 p-3">
+          <div className="grid h-full w-full place-items-center overflow-hidden rounded-xl bg-gradient-to-br from-neutral-900 to-black">
             {image ? (
               <img
                 src={image}
@@ -71,7 +71,7 @@ export function ProductCard({ product }: { product: Product }) {
                 loading="lazy"
               />
             ) : (
-              <div className="grid h-full w-full place-items-center text-sm text-slate-500">No image</div>
+              <div className="grid h-full w-full place-items-center text-sm text-[rgb(var(--muted))]">No image</div>
             )}
           </div>
         </div>
@@ -79,43 +79,43 @@ export function ProductCard({ product }: { product: Product }) {
         <div className="mt-4">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
-              <div className="truncate text-2xl font-bold tracking-tight text-slate-900">{product.productName}</div>
-              <div className="mt-1 text-xs text-slate-500">By {product.brand}</div>
+              <div className="truncate text-2xl font-bold tracking-tight text-[rgb(var(--fg))]">{product.productName}</div>
+              <div className="mt-1 text-xs text-[rgb(var(--muted))]">By {product.brand}</div>
             </div>
             {discountPct > 0 ? (
-              <div className="shrink-0 rounded-lg bg-green-100 px-2.5 py-1 text-xs font-semibold text-green-700">
+              <div className="shrink-0 rounded-lg border border-emerald-500/30 bg-emerald-950/40 px-2.5 py-1 text-xs font-semibold text-emerald-100">
                 {discountPct}% off
               </div>
             ) : null}
           </div>
 
-          <div className="mt-2 flex items-center gap-2 text-sm text-slate-600">
-            <span className="font-semibold text-slate-700">{product.rating.toFixed(1)}</span>
-            <span className="text-yellow-500">★</span>
+          <div className="mt-2 flex items-center gap-2 text-sm text-[rgb(var(--muted))]">
+            <span className="font-semibold text-white">{product.rating.toFixed(1)}</span>
+            <span className="text-yellow-400">★</span>
             <span>{product.warrantyPeriod}</span>
           </div>
 
-          <div className="mt-1 text-sm font-semibold text-blue-600">
+          <div className="mt-1 text-sm font-semibold text-white/85">
             EMI from {formatMoney(Math.max(1, Math.round(finalPrice / 21)))}/mo
           </div>
-          <div className="mt-1 text-xs text-slate-500">{product.deliveryTimeline}</div>
+          <div className="mt-1 text-xs text-[rgb(var(--muted))]">{product.deliveryTimeline}</div>
         </div>
 
-        <div className="mt-4 border-t border-slate-100 pt-4">
-          <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">Starting from</div>
+        <div className="mt-4 border-t border-white/10 pt-4">
+          <div className="text-[10px] font-semibold uppercase tracking-wide text-[rgb(var(--muted))]">Starting from</div>
           <div className="mt-1 flex items-end gap-2">
-            <div className="text-3xl font-bold leading-none tracking-tight text-slate-900">{formatMoney(finalPrice)}</div>
+            <div className="text-3xl font-bold leading-none tracking-tight text-[rgb(var(--fg))]">{formatMoney(finalPrice)}</div>
             {basePrice > finalPrice ? (
-              <div className="pb-0.5 text-sm text-slate-400 line-through">{formatMoney(basePrice)}</div>
+              <div className="pb-0.5 text-sm text-white/40 line-through">{formatMoney(basePrice)}</div>
             ) : null}
           </div>
           {variants.length > 1 ? (
-            <div className="mt-1 text-xs text-slate-500">Price varies by size & thickness</div>
+            <div className="mt-1 text-xs text-[rgb(var(--muted))]">Price varies by size & thickness</div>
           ) : (
-            <div className="mt-1 text-xs text-slate-500">Final price may vary by offer availability</div>
+            <div className="mt-1 text-xs text-[rgb(var(--muted))]">Final price may vary by offer availability</div>
           )}
           {variants.length === 1 ? (
-            <div className="mt-1 text-[11px] text-slate-500">
+            <div className="mt-1 text-[11px] text-[rgb(var(--muted))]">
               Inclusive of taxes. Shipping timeline shown at checkout.
             </div>
           ) : null}

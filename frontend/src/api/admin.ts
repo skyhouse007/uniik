@@ -1,4 +1,5 @@
 import { api } from './client'
+import { adminHeaders } from './adminClient'
 import { getAdminToken } from '../utils/adminAuth'
 
 export async function adminLogin(email: string, password: string) {
@@ -12,7 +13,7 @@ export async function adminMe() {
     throw new Error('Missing admin token')
   }
   const res = await api.get<{ ok: true; admin: { email: string } }>('/admin/me', {
-    headers: { Authorization: `Bearer ${token}` },
+    headers: adminHeaders(),
   })
   return res.data
 }

@@ -12,6 +12,8 @@ export const categoriesRouter = Router()
 
 categoriesRouter.get('/', async (req, res, next) => {
   try {
+    /** SPA + Axios: avoid conditional GET / 304 with empty parsed body — same concern as admin `adminClient`. */
+    res.set('Cache-Control', 'no-store, must-revalidate')
     const items = await Category.find({}).sort({ sortOrder: 1, name: 1 }).lean()
     res.json({ items })
   } catch (e) {

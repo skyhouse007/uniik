@@ -20,6 +20,9 @@ function computeCouponDiscount(subtotal: number, code?: string) {
   return 0
 }
 
+const inputClass =
+  'rounded-xl border border-white/20 bg-black px-3 py-2 text-sm text-white outline-none placeholder:text-white/35 focus:border-white/45'
+
 export function CheckoutPage() {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
@@ -84,7 +87,6 @@ export function CheckoutPage() {
 
     setBusy(true)
     try {
-      // Block payment if pincode is undeliverable.
       await assertDeliverableOrThrow(address.pincode)
 
       const ok = await loadRazorpaySdk()
@@ -101,11 +103,11 @@ export function CheckoutPage() {
         key: order.keyId,
         amount: order.amount,
         currency: order.currency,
-        name: 'CozyFoam',
-        description: 'Mattress purchase',
+        name: 'Uniik',
+        description: 'Order payment',
         order_id: order.razorpayOrderId,
         prefill: { name: address.fullName, contact: address.phone },
-        theme: { color: '#1E40AF' },
+        theme: { color: '#fafafa' },
         handler: async (response: any) => {
           try {
             const token2 = await getToken()
@@ -154,7 +156,6 @@ export function CheckoutPage() {
         },
       })
 
-      // Capture explicit failures from Razorpay
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ;(rzp as any).on?.('payment.failed', async (resp: any) => {
         setBusy(false)
@@ -184,27 +185,27 @@ export function CheckoutPage() {
   return (
     <div className="container-page py-8">
       <Helmet>
-        <title>Checkout — CozyFoam</title>
+        <title>Checkout — Uniik</title>
         <meta name="description" content="Secure checkout with Razorpay and address management." />
       </Helmet>
 
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <div className="text-xl font-extrabold tracking-tight">Checkout</div>
+          <div className="font-header text-xl font-extrabold tracking-tight text-[rgb(var(--fg))]">Checkout</div>
           <div className="mt-1 text-sm text-[rgb(var(--muted))]">Address • Order summary • Razorpay payment</div>
         </div>
       </div>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_380px]">
-        <section className="rounded-3xl border border-[rgb(var(--border))] bg-white p-6 shadow-sm">
-          <div className="text-sm font-semibold">Delivery address</div>
+        <section className="rounded-3xl border border-white/12 bg-black/45 p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-sm">
+          <div className="text-sm font-semibold text-[rgb(var(--fg))]">Delivery address</div>
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             <label className="grid gap-1 text-xs font-semibold text-[rgb(var(--muted))]">
               Full name *
               <input
                 value={address.fullName}
                 onChange={(e) => setAddress((a) => ({ ...a, fullName: e.target.value }))}
-                className="rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm outline-none focus:border-[rgb(var(--brand))]"
+                className={inputClass}
               />
             </label>
             <label className="grid gap-1 text-xs font-semibold text-[rgb(var(--muted))]">
@@ -212,7 +213,7 @@ export function CheckoutPage() {
               <input
                 value={address.phone}
                 onChange={(e) => setAddress((a) => ({ ...a, phone: e.target.value }))}
-                className="rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm outline-none focus:border-[rgb(var(--brand))]"
+                className={inputClass}
                 inputMode="tel"
               />
             </label>
@@ -221,7 +222,7 @@ export function CheckoutPage() {
               <input
                 value={address.line1}
                 onChange={(e) => setAddress((a) => ({ ...a, line1: e.target.value }))}
-                className="rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm outline-none focus:border-[rgb(var(--brand))]"
+                className={inputClass}
               />
             </label>
             <label className="grid gap-1 text-xs font-semibold text-[rgb(var(--muted))] sm:col-span-2">
@@ -229,7 +230,7 @@ export function CheckoutPage() {
               <input
                 value={address.line2}
                 onChange={(e) => setAddress((a) => ({ ...a, line2: e.target.value }))}
-                className="rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm outline-none focus:border-[rgb(var(--brand))]"
+                className={inputClass}
               />
             </label>
             <label className="grid gap-1 text-xs font-semibold text-[rgb(var(--muted))]">
@@ -237,7 +238,7 @@ export function CheckoutPage() {
               <input
                 value={address.city}
                 onChange={(e) => setAddress((a) => ({ ...a, city: e.target.value }))}
-                className="rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm outline-none focus:border-[rgb(var(--brand))]"
+                className={inputClass}
               />
             </label>
             <label className="grid gap-1 text-xs font-semibold text-[rgb(var(--muted))]">
@@ -245,7 +246,7 @@ export function CheckoutPage() {
               <input
                 value={address.state}
                 onChange={(e) => setAddress((a) => ({ ...a, state: e.target.value }))}
-                className="rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm outline-none focus:border-[rgb(var(--brand))]"
+                className={inputClass}
               />
             </label>
             <label className="grid gap-1 text-xs font-semibold text-[rgb(var(--muted))]">
@@ -253,7 +254,7 @@ export function CheckoutPage() {
               <input
                 value={address.pincode}
                 onChange={(e) => setAddress((a) => ({ ...a, pincode: e.target.value }))}
-                className="rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm outline-none focus:border-[rgb(var(--brand))]"
+                className={inputClass}
                 inputMode="numeric"
               />
             </label>
@@ -262,20 +263,20 @@ export function CheckoutPage() {
               <input
                 value={address.landmark}
                 onChange={(e) => setAddress((a) => ({ ...a, landmark: e.target.value }))}
-                className="rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm outline-none focus:border-[rgb(var(--brand))]"
+                className={inputClass}
               />
             </label>
           </div>
 
           {error ? (
-            <div className="mt-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            <div className="mt-4 rounded-2xl border border-red-500/35 bg-red-950/40 px-4 py-3 text-sm text-red-200">
               {error}
             </div>
           ) : null}
         </section>
 
-        <aside className="h-fit rounded-3xl border border-[rgb(var(--border))] bg-white p-6 shadow-sm">
-          <div className="text-sm font-semibold">Order summary</div>
+        <aside className="h-fit rounded-3xl border border-white/12 bg-black/45 p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-sm">
+          <div className="text-sm font-semibold text-[rgb(var(--fg))]">Order summary</div>
           <div className="mt-4 space-y-3">
             {cart.items.map((i) => (
               <div
@@ -283,7 +284,7 @@ export function CheckoutPage() {
                 className="flex items-start justify-between gap-3 text-sm"
               >
                 <div className="min-w-0">
-                  <div className="truncate font-semibold">{i.name}</div>
+                  <div className="truncate font-semibold text-[rgb(var(--fg))]">{i.name}</div>
                   <div className="mt-0.5 text-xs text-[rgb(var(--muted))]">
                     Qty {i.quantity}
                     {i.selectedVariantCategory ? ` • ${i.selectedVariantCategory}` : ''}
@@ -291,26 +292,28 @@ export function CheckoutPage() {
                     {i.selectedThickness ? ` · ${i.selectedThickness}` : ''}
                   </div>
                 </div>
-                <div className="font-semibold">{formatMoney(i.unitPrice * i.quantity)}</div>
+                <div className="font-semibold text-[rgb(var(--fg))]">{formatMoney(i.unitPrice * i.quantity)}</div>
               </div>
             ))}
-            <div className="h-px bg-[rgb(var(--border))]" />
+            <div className="h-px bg-white/10" />
             <div className="flex items-center justify-between text-sm">
               <div className="text-[rgb(var(--muted))]">Subtotal</div>
-              <div className="font-semibold">{formatMoney(subtotal)}</div>
+              <div className="font-semibold text-[rgb(var(--fg))]">{formatMoney(subtotal)}</div>
             </div>
             <div className="flex items-center justify-between text-sm">
               <div className="text-[rgb(var(--muted))]">Shipping</div>
-              <div className="font-semibold">{shipping ? formatMoney(shipping) : 'Free'}</div>
+              <div className="font-semibold text-[rgb(var(--fg))]">{shipping ? formatMoney(shipping) : 'Free'}</div>
             </div>
             <div className="flex items-center justify-between text-sm">
               <div className="text-[rgb(var(--muted))]">Coupon</div>
-              <div className="font-semibold">{couponDiscount ? `- ${formatMoney(couponDiscount)}` : formatMoney(0)}</div>
+              <div className="font-semibold text-[rgb(var(--fg))]">
+                {couponDiscount ? `- ${formatMoney(couponDiscount)}` : formatMoney(0)}
+              </div>
             </div>
-            <div className="h-px bg-[rgb(var(--border))]" />
+            <div className="h-px bg-white/10" />
             <div className="flex items-center justify-between">
-              <div className="text-sm font-semibold">Total</div>
-              <div className="text-lg font-extrabold">{formatMoney(total)}</div>
+              <div className="text-sm font-semibold text-[rgb(var(--fg))]">Total</div>
+              <div className="text-lg font-extrabold text-[rgb(var(--fg))]">{formatMoney(total)}</div>
             </div>
           </div>
 
@@ -321,7 +324,7 @@ export function CheckoutPage() {
           <button
             disabled={busy || !cart.items.length}
             onClick={payNow}
-            className="mt-5 w-full rounded-2xl bg-[rgb(var(--brand))] px-5 py-3 text-sm font-semibold text-white disabled:opacity-50"
+            className="mt-5 w-full rounded-2xl bg-white px-5 py-3 text-sm font-semibold text-neutral-900 transition hover:bg-neutral-200 disabled:opacity-50"
           >
             {busy ? 'Opening Razorpay…' : 'Pay with Razorpay'}
           </button>
@@ -329,7 +332,7 @@ export function CheckoutPage() {
             <button
               type="button"
               onClick={payNow}
-              className="mt-2 w-full rounded-2xl border border-[rgb(var(--border))] bg-white px-5 py-3 text-sm font-semibold text-[rgb(var(--fg))] shadow-sm transition hover:border-[rgb(var(--muted))] hover:shadow"
+              className="mt-2 w-full rounded-2xl border border-white/25 bg-transparent px-5 py-3 text-sm font-semibold text-white transition hover:border-white/45 hover:bg-white/10"
             >
               Retry payment
             </button>
@@ -339,4 +342,3 @@ export function CheckoutPage() {
     </div>
   )
 }
-

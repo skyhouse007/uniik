@@ -16,7 +16,7 @@ export function BankLogosRow({ className }: Props) {
         {banks.map((b) => (
           <div
             key={b.name}
-            className="inline-flex items-center gap-2 rounded-xl border border-black/10 bg-white px-3 py-2 shadow-sm"
+            className="inline-flex items-center gap-2 rounded-xl border border-white/12 bg-neutral-100 px-3 py-2 shadow-sm"
           >
             <img src={b.src} alt={b.name} className="h-6 w-auto object-contain" loading="lazy" decoding="async" />
             <span className="text-xs font-semibold text-[rgb(var(--fg))]">{b.name}</span>

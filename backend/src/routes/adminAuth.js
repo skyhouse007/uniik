@@ -7,8 +7,14 @@ import { requireAdminToken } from '../middleware/adminAuth.js'
 export const adminAuthRouter = Router()
 
 const LoginSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(4),
+  email: z
+    .string()
+    .transform((s) => s.trim().toLowerCase())
+    .pipe(z.string().email()),
+  password: z
+    .string()
+    .min(1, 'Password required')
+    .transform((s) => s.trim()),
 })
 
 adminAuthRouter.post('/login', (req, res, next) => {

@@ -21,15 +21,15 @@ export function ProfilePage() {
   return (
     <div className="container-page py-8">
       <Helmet>
-        <title>Profile — CozyFoam</title>
-        <meta name="description" content="Manage your CozyFoam profile and addresses." />
+        <title>Profile — Uniik</title>
+        <meta name="description" content="Manage your Uniik profile and account settings." />
       </Helmet>
       <div>
-        <div className="text-xl font-extrabold tracking-tight">Profile</div>
+        <div className="font-header text-xl font-extrabold tracking-tight text-[rgb(var(--fg))]">Profile</div>
         <div className="mt-1 text-sm text-[rgb(var(--muted))]">Personal details and account settings</div>
       </div>
 
-      <section className="mt-8 rounded-3xl border border-[rgb(var(--border))] bg-white p-6 shadow-sm">
+      <section className="mt-8 rounded-3xl border border-white/12 bg-black/45 p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-sm">
         <h2 className="text-sm font-semibold text-[rgb(var(--fg))]">Personal details</h2>
         <p className="mt-1 text-xs text-[rgb(var(--muted))]">Information we use for your orders and account.</p>
         <dl className="mt-5 grid gap-4">
@@ -42,11 +42,10 @@ export function ProfilePage() {
 
       <div className="mt-8">
         <div className="mb-3 text-sm font-semibold text-[rgb(var(--fg))]">Account settings</div>
-        <div className="rounded-3xl border border-[rgb(var(--border))] bg-white p-4 shadow-sm">
+        <div className="rounded-3xl border border-white/12 bg-black/45 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-sm">
           <UserProfile />
         </div>
       </div>
     </div>
   )
 }
-

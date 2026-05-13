@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import mongoose from 'mongoose'
 import { z } from 'zod'
+import { clerkMiddleware } from '@clerk/express'
 import { Product } from '../models/Product.js'
 import { Category } from '../models/Category.js'
 import { requireClerkAuth } from '../middleware/auth.js'
@@ -8,6 +9,10 @@ import { requireAdminToken } from '../middleware/adminAuth.js'
 import { Review } from '../models/Review.js'
 import { clerkClient } from '@clerk/clerk-sdk-node'
 import { normalizePincode, resolveProductDelivery } from '../utils/productDelivery.js'
+import { env } from '../config/env.js'
+
+/** Clerk only where customer JWT/session is expected — not on admin Bearer JWT routes. */
+const maybeClerkReviews = env.CLERK_SECRET_KEY ? clerkMiddleware() : (req, res, next) => next()
 
 export const productsRouter = Router()
 
@@ -264,7 +269,7 @@ const ReviewSchema = z.object({
   comment: z.string().min(5).max(1200),
 })
 
-productsRouter.post('/:id/reviews', requireClerkAuth, async (req, res, next) => {
+productsRouter.post('/:id/reviews', maybeClerkReviews, requireClerkAuth, async (req, res, next) => {
   try {
     const userId = req.auth.userId
     const payload = ReviewSchema.parse(req.body)
